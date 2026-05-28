@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- ReparaTech Palette (from provided code) -->
+    <color name="primary">#003D9B</color>
+    <color name="primary_container">#0052CC</color>
+    <color name="on_primary_container">#C4D2FF</color>
+
+    <color name="surface_bright">#F8F9FF</color>
+    <color name="surface_container">#EBEEF6</color>
+    <color name="surface_container_low">#F0F3FC</color>
+    <color name="surface_container_high">#E5E8F0</color>
+    <color name="surface_container_highest">#DFE2EB</color>
+    <color name="surface_container_lowest">#FFFFFF</color>
+
+    <color name="on_surface">#181C22</color>
+    <color name="on_surface_variant">#434654</color>
+    <color name="outline">#737685</color>
+    <color name="outline_variant">#C3C6D6</color>
+
+    <color name="inverse_surface">#2C3137</color>
+    <color name="inverse_on_surface">#EEF1F9</color>
+    <color name="inverse_primary">#B2C5FF</color>
+
+    <!-- Login specific (compatibility) -->
+    <color name="login_background">#F8F9FF</color>
+    <color name="login_primary">#003D9B</color>
+    <color name="login_on_surface">#181C22</color>
+    <color name="login_on_surface_variant">#434654</color>
+    <color name="login_text_secondary">#434654</color>
+    <color name="login_surface">#F8F9FF</color>
+    <color name="login_surface_container">#EBEEF6</color>
+    <color name="login_surface_container_low">#F0F3FC</color>
+    <color name="login_outline">#737685</color>
+    <color name="login_outline_variant">#C3C6D6</color>
+    <color name="login_primary_soft">#E8EFFF</color>
+
+    <!-- Splash Screen Colors -->
+    <color name="splash_primary">#003D9B</color>
+    <color name="splash_primary_dark">#002D72</color>
+    <color name="splash_on_primary_variant">#B3FFFFFF</color>
+    <color name="splash_on_primary_disabled">#80FFFFFF</color>
+
+    <!-- Modern Navigation Colors -->
+    <color name="nav_background">#F7F9FF</color>
+    <color name="nav_active_indicator">#EADDFF</color>
+    <color name="nav_active_icon">#1D1B20</color>
+    <color name="nav_inactive_icon">#49454F</color>
+
+    <!-- Brand Colors -->
+    <color name="brand_blue">#003D9B</color>
+    <color name="brand_blue_light">#E8EFFF</color>
+
+    <!-- Status Colors -->
+    <color name="success_container">#D1F2E1</color>
+    <color name="on_success_container">#115E33</color>
+    <color name="warning_container">#FFECB3</color>
+    <color name="on_warning_container">#856404</color>
+    <color name="error_container">#F9DEDC</color>
+    <color name="on_error_container">#410E0B</color>
+    <color name="info_container">#D1E9FF</color>
+    <color name="on_info_container">#004085</color>
+</resources>
