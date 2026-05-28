@@ -1,73 +1,92 @@
 package com.cibertec.cibertecapp
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Patterns
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.cibertec.cibertecapp.databinding.ActivityLoginBinding
-import com.google.android.material.button.MaterialButton
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private var selectedRole: String = "Cliente"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize UI with default role
-        updateRoleUI(binding.btnRoleClient, binding.btnRoleAdmin)
-
-        setupRoleSelector()
+        ServiceRepository.init(this)
         setupListeners()
-    }
-
-    private fun setupRoleSelector() {
-        binding.btnRoleClient.setOnClickListener {
-            updateRoleUI(binding.btnRoleClient, binding.btnRoleAdmin)
-            selectedRole = "Cliente"
-        }
-
-        binding.btnRoleAdmin.setOnClickListener {
-            updateRoleUI(binding.btnRoleAdmin, binding.btnRoleClient)
-            selectedRole = "Administrador"
-        }
-    }
-
-    private fun updateRoleUI(selected: MaterialButton, unselected: MaterialButton) {
-        // Selected Button Styles
-        selected.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.login_primary))
-        selected.setTextColor(ContextCompat.getColor(this, R.color.white))
-
-        // Unselected Button Styles
-        unselected.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.TRANSPARENT)
-        unselected.setTextColor(ContextCompat.getColor(this, R.color.login_on_surface_variant))
     }
 
     private fun setupListeners() {
         binding.btnlogin.setOnClickListener {
-            val email = binding.etEmail.text.toString()
+            val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString()
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
-            } else {
-                if (selectedRole == "Cliente") {
-                    val intent = Intent(this, HomeClientActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this, "Iniciando sesión como Administrador (En desarrollo)", Toast.LENGTH_SHORT).show()
+            when {
+                email.isEmpty() || password.isEmpty() -> {
+                    showValidationError(
+                        "Campos Obligatorios",
+                        "Por favor, complete todos los campos para continuar."
+                    )
+                }
+                !isValidEmail(email) -> {
+                    showValidationError(
+                        "Formato Inválido",
+                        "El correo electrónico ingresado no tiene un formato válido."
+                    )
+                }
+                !isSecurePassword(password) -> {
+                    showValidationError(
+                        "Contraseña Débil",
+                        "La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, un número y un carácter especial."
+                    )
+                }
+                else -> {
+                    val validEmail = "reparatech12@gmail.com"
+                    val validPassword = "Repara2026!"
+
+                    if (email == validEmail && password == validPassword) {
+                        // Login exitoso
+                        val intent = Intent(this, HomeClientActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        showValidationError(
+                            "Credenciales Incorrectas",
+                            "El correo electrónico o la contraseña son incorrectos. Por favor, inténtelo de nuevo."
+                        )
+                    }
                 }
             }
         }
 
         binding.btnregister.setOnClickListener {
-            Toast.makeText(this, "Navegando al registro...", Toast.LENGTH_SHORT).show()
+            showValidationError(
+                "Próximamente",
+                "La función de registro estará disponible pronto."
+            )
         }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun isSecurePassword(password: String): Boolean {
+        val passwordPattern = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$"
+        return password.matches(Regex(passwordPattern))
+    }
+
+    private fun showValidationError(title: String, message: String) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Entendido") { dialog, _ -> 
+                dialog.dismiss() 
+            }
+            .show()
     }
 }

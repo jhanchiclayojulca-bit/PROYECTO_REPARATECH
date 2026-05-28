@@ -6,91 +6,83 @@
     android:layout_height="match_parent"
     android:background="@color/surface_bright">
 
-    <!-- Header / Top Bar (Superior) -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         app:elevation="0dp">
 
-        <com.google.android.material.card.MaterialCardView
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="0dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="4dp"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.TopBar">
+            android:layout_height="110dp"
+            android:paddingTop="48dp"
+            android:background="@color/white"
+            app:contentInsetStart="0dp">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:paddingTop="36dp"
-                app:contentInsetStart="0dp">
+                android:layout_height="match_parent"
+                android:paddingHorizontal="20dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingHorizontal="20dp">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/avatarImage"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:padding="2dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_person"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                    app:strokeColor="@color/outline_variant"
+                    app:strokeWidth="1dp" />
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/avatarImage"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:padding="2dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_person"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                        app:strokeColor="@color/outline_variant"
-                        app:strokeWidth="1dp" />
+                <LinearLayout
+                    android:id="@+id/titleContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/avatarImage"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:orientation="vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/avatarImage"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:fontFamily="sans-serif-black"
+                        android:text="ReparaTech"
+                        android:textColor="@color/brand_blue"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="-0.02" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-black"
-                            android:text="ReparaTech"
-                            android:textColor="@color/brand_blue"
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="-0.02" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/service_technical"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="11sp"
+                        android:alpha="0.7"
+                        android:letterSpacing="0.05"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/service_technical"
-                            android:textColor="@color/on_surface_variant"
-                            android:textSize="11sp"
-                            android:alpha="0.7"
-                            android:letterSpacing="0.05"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnNotifications"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:icon="@drawable/ic_notifications_none"
+                    app:iconTint="@color/brand_blue"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.Material3.Button.IconButton"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        app:icon="@drawable/ic_notifications"
-                        app:iconTint="@color/brand_blue"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.appbar.MaterialToolbar>
-        </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -105,12 +97,11 @@
             android:orientation="vertical"
             android:paddingBottom="140dp">
 
-            <!-- Hero Section with Search -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="20dp"
+                android:paddingHorizontal="24dp"
                 android:paddingTop="28dp">
 
                 <TextView
@@ -131,7 +122,6 @@
                     android:textSize="16sp"
                     android:alpha="0.8" />
 
-                <!-- Modern Search Bar -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -161,26 +151,27 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Categories Horizontal Scroll -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:clipToPadding="false"
-                android:paddingHorizontal="20dp"
+                android:paddingHorizontal="24dp"
                 android:scrollbars="none">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- Category: Laptops -->
                     <LinearLayout
+                        android:id="@+id/catLaptop"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:layout_marginEnd="20dp">
+                        android:layout_marginEnd="20dp"
+                        android:clickable="true"
+                        android:focusable="true">
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="64dp"
                             android:layout_height="64dp"
@@ -204,13 +195,15 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Category: Phones -->
                     <LinearLayout
+                        android:id="@+id/catCelulares"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:layout_marginEnd="20dp">
+                        android:layout_marginEnd="20dp"
+                        android:clickable="true"
+                        android:focusable="true">
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="64dp"
                             android:layout_height="64dp"
@@ -233,13 +226,15 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <!-- Category: Gaming -->
                     <LinearLayout
+                        android:id="@+id/catGaming"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:layout_marginEnd="20dp">
+                        android:layout_marginEnd="20dp"
+                        android:clickable="true"
+                        android:focusable="true">
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="64dp"
                             android:layout_height="64dp"
@@ -262,12 +257,14 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <!-- Category: Tablets -->
                     <LinearLayout
+                        android:id="@+id/catTablets"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:focusable="true">
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="64dp"
                             android:layout_height="64dp"
@@ -293,14 +290,14 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <!-- Active Repairs Section -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:paddingHorizontal="20dp">
+                android:paddingHorizontal="24dp">
 
                 <TextView
+                    android:id="@+id/tvSectionTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
@@ -310,6 +307,7 @@
                     android:letterSpacing="-0.01" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnViewAll"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -318,143 +316,180 @@
                     android:text="Ver Todas"
                     android:textColor="@color/brand_blue"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:paddingEnd="0dp" />
+                    android:textStyle="bold" />
             </RelativeLayout>
 
-            <!-- Active Repair Card -->
-            <com.google.android.material.card.MaterialCardView
+            <LinearLayout
+                android:id="@+id/repairsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="16dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0.5dp"
-                app:strokeColor="@color/outline_variant"
-                app:strokeWidth="1dp">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/iconContainer"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            app:cardBackgroundColor="@color/brand_blue_light"
-                            app:cardCornerRadius="16dp"
-                            app:cardElevation="0dp">
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:padding="14dp"
-                                android:src="@drawable/ic_laptop"
-                                app:tint="@color/brand_blue" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <LinearLayout
-                            android:id="@+id/repairTitleContainer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/iconContainer"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-black"
-                                android:text="MacBook Pro M2"
-                                android:textColor="@color/on_surface"
-                                android:textSize="18sp" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="ORD-8924A • Diagnóstico"
-                                android:textColor="@color/on_surface_variant"
-                                android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            app:cardBackgroundColor="@color/info_container"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="0dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingHorizontal="10dp"
-                                android:paddingVertical="6dp"
-                                android:text="PROGRESO"
-                                android:textColor="@color/on_info_container"
-                                android:textSize="10sp"
-                                android:textStyle="bold" />
-                        </com.google.android.material.card.MaterialCardView>
-                    </RelativeLayout>
-
-                    <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:progress="35"
-                        app:trackColor="@color/surface_container"
-                        app:indicatorColor="@color/brand_blue"
-                        app:trackThickness="8dp"
-                        app:trackCornerRadius="4dp" />
-
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/outline_variant"
+                    app:strokeWidth="1dp">
+                    <!-- ... contenido de reparación 1 ... -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Entrega estimada: 24 Oct"
-                            android:textColor="@color/on_surface_variant"
-                            android:textSize="13sp" />
-                        <com.google.android.material.button.MaterialButton
-                            style="@style/Widget.Material3.Button.TonalButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:text="Ver Detalles"
-                            android:textSize="13sp"
-                            android:textAllCaps="false"
-                            app:cornerRadius="12dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-            <!-- Quick Actions Grid -->
-            <TextView
-                android:layout_width="wrap_content"
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/iconContainer"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                app:cardBackgroundColor="@color/brand_blue_light"
+                                app:cardCornerRadius="16dp"
+                                app:cardElevation="0dp">
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:padding="14dp"
+                                    android:src="@drawable/ic_laptop"
+                                    app:tint="@color/brand_blue" />
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <LinearLayout
+                                android:id="@+id/repairTitleContainer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_toEndOf="@id/iconContainer"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-black"
+                                    android:text="MacBook Pro M2"
+                                    android:textColor="@color/on_surface"
+                                    android:textSize="18sp" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="ORD-8924A • Diagnóstico"
+                                    android:textColor="@color/on_surface_variant"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                app:cardBackgroundColor="@color/info_container"
+                                app:cardCornerRadius="8dp"
+                                app:cardElevation="0dp">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingHorizontal="10dp"
+                                    android:paddingVertical="6dp"
+                                    android:text="PROGRESO"
+                                    android:textColor="@color/on_info_container"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+                            </com.google.android.material.card.MaterialCardView>
+                        </RelativeLayout>
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:progress="35"
+                            app:trackColor="@color/surface_container"
+                            app:indicatorColor="@color/brand_blue"
+                            app:trackThickness="8dp"
+                            app:trackCornerRadius="4dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Entrega estimada: 24 Oct"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="13sp" />
+                            <com.google.android.material.button.MaterialButton
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="Ver Detalles"
+                                android:textSize="13sp"
+                                android:textAllCaps="false"
+                                app:cornerRadius="12dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/productsContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="sans-serif-black"
-                android:text="Accesos Rápidos"
-                android:textColor="@color/on_surface"
-                android:textSize="20sp" />
+                android:orientation="vertical"
+                android:visibility="gone">
+                <!-- Se llenará dinámicamente -->
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnBackContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBackHome"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Volver al Inicio"
+                    app:cornerRadius="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/homeSectionsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Accesos Rápidos"
+                    android:textColor="@color/on_surface"
+                    android:textSize="20sp" />
+                <!-- ... resto de secciones del home ... -->
 
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
+                android:layout_marginHorizontal="16dp"
                 android:columnCount="2">
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btn_new_request"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_rowWeight="1"
@@ -462,7 +497,7 @@
                     android:layout_margin="8dp"
                     app:cardBackgroundColor="@color/brand_blue"
                     app:cardCornerRadius="24dp"
-                    app:cardElevation="4dp"
+                    app:cardElevation="2dp"
                     app:strokeWidth="0dp">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -486,6 +521,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btn_my_devices"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_rowWeight="1"
@@ -504,7 +540,7 @@
                         <ImageView
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:src="@drawable/ic_list_alt"
+                            android:src="@drawable/ic_devices"
                             app:tint="@color/brand_blue" />
                         <TextView
                             android:layout_width="wrap_content"
@@ -516,16 +552,14 @@
                             android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-
             </GridLayout>
 
-            <!-- Tech Tip Banner -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
+                android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="32dp"
-                app:cardBackgroundColor="@color/surface_container_highest"
+                app:cardBackgroundColor="@color/brand_blue_light"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp">
 
@@ -535,36 +569,12 @@
                     android:orientation="vertical"
                     android:padding="24dp">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/splash_icon_bg"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="6dp"
-                        android:gravity="center_vertical">
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:src="@drawable/ic_lightbulb"
-                            app:tint="@color/brand_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="SOPORTE TÉCNICO"
-                            android:textColor="@color/brand_blue"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.1" />
-                    </LinearLayout>
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
                         android:fontFamily="sans-serif-black"
                         android:text="¿Necesitas ayuda?"
-                        android:textColor="@color/on_surface"
+                        android:textColor="@color/brand_blue"
                         android:textSize="20sp" />
 
                     <TextView
@@ -589,9 +599,9 @@
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
 
-    <!-- Floating Bottom Navigation -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

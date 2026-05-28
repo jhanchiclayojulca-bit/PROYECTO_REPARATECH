@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CibertecApp">
         <activity
-            android:name=".features.auth.presentation.activities.SplashActivity"
+            android:name=".LauncherActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,8 +21,46 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".features.auth.presentation.activities.LoginActivity"/>
-
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeClientActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileClientActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DevicesClientActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddDeviceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DeviceDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SupportActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".PersonalInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RequestConfirmationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RequestsClientActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RepairsClientActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentReceiptActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

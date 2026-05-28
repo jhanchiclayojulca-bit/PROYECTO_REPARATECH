@@ -16,22 +16,41 @@ class ProfileClientActivity : AppCompatActivity() {
         binding = ActivityProfileClientBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        ServiceRepository.init(this)
         setupTopBar()
         setupBottomNavigation()
+        setupProfileOptions()
+    }
+
+    private fun setupProfileOptions() {
+        binding.btnBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        // Opción: Mi Información
+        binding.optionAccountInfo.root.setOnClickListener {
+            startActivity(Intent(this, PersonalInfoActivity::class.java))
+        }
+        binding.optionAccountInfo.optionIcon.setImageResource(R.drawable.ic_person)
+        binding.optionAccountInfo.optionTitle.text = "Información Personal"
+        
+        // Opción: Seguridad
+        binding.optionSecurity.optionIcon.setImageResource(R.drawable.ic_security)
+        binding.optionSecurity.optionTitle.text = "Seguridad y Contraseña"
+
+        // Opción: Mis Solicitudes
+        binding.optionRequests.optionIcon.setImageResource(R.drawable.ic_notifications_none)
+        binding.optionRequests.optionTitle.text = "Mis Solicitudes de Soporte"
+
+        // Opción: Centro de Ayuda
+        binding.optionHelp.optionIcon.setImageResource(R.drawable.ic_help)
+        binding.optionHelp.optionTitle.text = "Centro de Ayuda"
     }
 
     private fun setupTopBar() {
         // Imágenes Premium en Ultra HD (4K) desde Unsplash
         val avatarUrl = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=1000"
-        val coverUrl = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=2048"
         
-        binding.avatarImage.load(avatarUrl) {
-            crossfade(true)
-            placeholder(R.drawable.ic_person)
-            error(R.drawable.ic_person)
-            transformations(CircleCropTransformation())
-        }
-
         binding.profileAvatarLarge.load(avatarUrl) {
             crossfade(true)
             placeholder(R.drawable.ic_person)
@@ -39,8 +58,8 @@ class ProfileClientActivity : AppCompatActivity() {
             transformations(CircleCropTransformation())
         }
 
-        binding.coverImage.load(coverUrl) {
-            crossfade(true)
+        binding.btnEditProfile.setOnClickListener {
+            startActivity(Intent(this, PersonalInfoActivity::class.java))
         }
 
         binding.logoutButton.setOnClickListener {
@@ -55,13 +74,21 @@ class ProfileClientActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> {
                     startActivity(Intent(this, HomeClientActivity::class.java))
-                    overridePendingTransition(0, 0)
+                    finish()
+                    true
+                }
+                R.id.nav_requests -> {
+                    startActivity(Intent(this, RequestsClientActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.nav_repairs -> {
+                    startActivity(Intent(this, RepairsClientActivity::class.java))
                     finish()
                     true
                 }
                 R.id.nav_devices -> {
                     startActivity(Intent(this, DevicesClientActivity::class.java))
-                    overridePendingTransition(0, 0)
                     finish()
                     true
                 }

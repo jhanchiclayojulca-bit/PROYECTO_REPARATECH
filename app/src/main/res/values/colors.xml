@@ -53,6 +53,7 @@
     <!-- Brand Colors -->
     <color name="brand_blue">#003D9B</color>
     <color name="brand_blue_light">#E8EFFF</color>
+    <color name="brand_blue_dark">#002D72</color>
 
     <!-- Status Colors -->
     <color name="success_container">#D1F2E1</color>

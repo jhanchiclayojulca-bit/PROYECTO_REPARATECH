@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="screen_padding">24dp</dimen>
+    <dimen name="card_corner_radius">24dp</dimen>
+    <dimen name="button_height">56dp</dimen>
+    <dimen name="header_height">100dp</dimen>
+</resources>
