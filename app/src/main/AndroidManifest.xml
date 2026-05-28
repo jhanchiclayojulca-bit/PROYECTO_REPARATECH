@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CibertecApp">
         <activity
-            android:name=".LauncherActivity"
+            android:name=".features.auth.presentation.activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".features.auth.presentation.activities.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".HomeClientActivity"
