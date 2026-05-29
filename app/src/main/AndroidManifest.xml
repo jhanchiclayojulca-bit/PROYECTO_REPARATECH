@@ -25,7 +25,7 @@
             android:name=".features.auth.presentation.activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeClientActivity"
+            android:name=".features.home.presentation.activities.HomeActivity"
             android:exported="false" />
         <activity
             android:name=".ProfileClientActivity"

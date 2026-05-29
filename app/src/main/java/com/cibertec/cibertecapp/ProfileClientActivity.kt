@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.cibertec.cibertecapp.databinding.ActivityProfileClientBinding
+import com.cibertec.cibertecapp.features.auth.presentation.activities.LoginActivity
 
 class ProfileClientActivity : AppCompatActivity() {
 
