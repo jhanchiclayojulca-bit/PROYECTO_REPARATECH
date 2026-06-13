@@ -1,10 +1,11 @@
 package com.cibertec.cibertecapp.features.home.presentation.state
 
-import com.cibertec.cibertecapp.features.home.data.model.RepairModel
+import com.cibertec.cibertecapp.features.home.domain.model.Repair
 
 data class HomeState(
-
-    val  repairs: List<RepairModel> = emptyList(),
+    val repairs: List<Repair> = emptyList(),
     val isLoading: Boolean = false,
+    val userName: String = "Usuario",
+    val userPhotoUrl: String = "",
     val error: String? = null
 )

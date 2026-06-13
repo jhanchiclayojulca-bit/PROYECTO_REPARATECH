@@ -19,6 +19,20 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+
+
+        <!-- Fix for Black Flickers -->
+        <item name="android:windowBackground">@color/surface_bright</item>
+
+        <!-- Global Axis-Z Transitions -->
+        <item name="android:windowAnimationStyle">@style/CustomActivityAnimation</item>
+    </style>
+
+    <style name="CustomActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/axis_z_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/axis_z_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/axis_z_pop_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/axis_z_pop_exit</item>
     </style>
 
     <!-- Custom Bottom Navigation Text Styles -->

@@ -12,55 +12,113 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CibertecApp">
+
+        <!-- Splash & Auth -->
         <activity
             android:name=".features.auth.presentation.activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".features.auth.presentation.activities.LoginActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".features.auth.presentation.activities.OnboardingActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".features.auth.presentation.activities.RegisterActivity"
+            android:exported="false" />
+
+
         <activity
             android:name=".features.home.presentation.activities.HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
+
         <activity
-            android:name=".ProfileClientActivity"
-            android:exported="false" />
+            android:name=".features.requests.presentation.activities.RequestsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
+
         <activity
-            android:name=".DevicesClientActivity"
-            android:exported="false" />
+            android:name=".features.repairs.presentation.activities.RepairsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
         <activity
-            android:name=".AddDeviceActivity"
+            android:name=".features.repairs.presentation.activities.RepairDetailActivity"
             android:exported="false" />
+
         <activity
-            android:name=".DeviceDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SupportActivity"
+            android:name=".features.repairs.presentation.activities.NewRepairActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
-            android:name=".PersonalInfoActivity"
+            android:name=".features.repairs.presentation.activities.PaymentReceiptActivity"
             android:exported="false" />
+
+        <!-- Devices -->
+        <activity
+            android:name=".features.devices.presentation.activities.DevicesActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".features.devices.presentation.activities.AddDeviceActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".features.devices.presentation.activities.DeviceDetailActivity"
+            android:exported="false" />
+
+        <!-- Profile & Security -->
+        <activity
+            android:name=".features.profile.presentation.activities.ProfileActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".features.profile.presentation.activities.PersonalInfoActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".features.profile.presentation.activities.SecurityActivity"
+            android:exported="false" />
+
+        <!-- Support -->
+        <activity
+            android:name=".features.support.presentation.activities.SupportActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Remaining Global (to be migrated or removed if unused) -->
         <activity
             android:name=".RequestConfirmationActivity"
             android:exported="false" />
-        <activity
-            android:name=".RequestsClientActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RepairsClientActivity"
-            android:exported="false" />
+
         <activity
             android:name=".PaymentActivity"
             android:exported="false" />
-        <activity
-            android:name=".PaymentReceiptActivity"
-            android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 
 </manifest>

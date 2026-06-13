@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface_bright">
+    android:background="@color/surface_bright"
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -15,8 +17,7 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:paddingTop="48dp"
+            android:layout_height="60dp"
             android:background="@color/white"
             app:contentInsetStart="0dp">
 
@@ -71,11 +72,11 @@
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnNotifications"
+                    android:id="@+id/btnLogout"
                     style="@style/Widget.Material3.Button.IconButton"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    app:icon="@drawable/ic_notifications_none"
+                    app:icon="@drawable/ic_logout"
                     app:iconTint="@color/brand_blue"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -102,9 +103,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingHorizontal="24dp"
-                android:paddingTop="28dp">
+                android:paddingTop="15dp">
 
                 <TextView
+                    android:id="@+id/tvUserWelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
@@ -140,13 +142,17 @@
                             android:layout_height="24dp"
                             android:src="@drawable/ic_search"
                             app:tint="@color/outline" />
-                        <TextView
-                            android:layout_width="wrap_content"
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etSearch"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
-                            android:text="Busca servicios, equipos o técnicos..."
-                            android:textColor="@color/outline"
-                            android:textSize="14sp" />
+                            android:background="@android:color/transparent"
+                            android:hint="Busca servicios, equipos..."
+                            android:textSize="14sp"
+                            android:textColor="@color/on_surface"
+                            android:textColorHint="@color/outline"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -154,9 +160,9 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="20dp"
                 android:clipToPadding="false"
-                android:paddingHorizontal="24dp"
+                android:paddingHorizontal="30dp"
                 android:scrollbars="none">
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -293,7 +299,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:paddingHorizontal="24dp">
 
                 <TextView
@@ -301,10 +307,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
+                    android:letterSpacing="-0.01"
                     android:text="Tus Reparaciones"
                     android:textColor="@color/on_surface"
-                    android:textSize="22sp"
-                    android:letterSpacing="-0.01" />
+                    android:textSize="22sp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnViewAll"
@@ -319,14 +325,38 @@
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/repairsContainer"
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:shimmer_auto_start="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <include layout="@layout/item_shimmer_repair" />
+                    <include layout="@layout/item_shimmer_repair" />
+                    <include layout="@layout/item_shimmer_repair" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
-
-            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRepairs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:visibility="gone"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_repair_card"/>
+            <TextView
+                android:id="@+id/tvEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No se encontraron resultados"
+                android:textAlignment="center"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/productsContainer"
@@ -363,7 +393,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="24dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="16dp"
                     android:fontFamily="sans-serif-black"
                     android:text="Accesos Rápidos"
@@ -402,7 +432,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
-                            android:text="Nueva\nSolicitud"
+                            android:text="Nueva\nReparacion"
                             android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textStyle="bold" />

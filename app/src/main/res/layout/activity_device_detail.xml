@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface_bright">
+    android:background="@color/surface_bright"
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -15,15 +16,13 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:paddingTop="48dp"
-            android:background="@color/white"
-            app:contentInsetStart="0dp">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingHorizontal="20dp">
+                android:layout_marginEnd="16dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnBack"
@@ -31,7 +30,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     app:icon="@drawable/ic_arrow_back"
-                    app:iconTint="@color/on_surface"
+                    app:iconTint="@color/brand_blue"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -41,9 +40,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
                     android:text="Detalles del Equipo"
-                    android:textColor="@color/on_surface"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+                    android:textColor="@color/login_primary"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +49,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.appbar.MaterialToolbar>
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -64,33 +61,54 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="20dp"
+            android:paddingBottom="40dp">
 
+            <!-- Image Container -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
+                android:layout_height="220dp"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="36dp"
-                app:cardElevation="2dp"
+                app:cardCornerRadius="32dp"
+                app:cardElevation="3dp"
                 app:strokeWidth="0dp">
-                <ImageView
-                    android:id="@+id/deviceImage"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_laptop"
-                    android:contentDescription="Imagen del dispositivo" />
+                    android:layout_height="match_parent">
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/imageShimmer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:shimmer_auto_start="true">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#F0F0F0" />
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <ImageView
+                        android:id="@+id/deviceImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="Imagen del dispositivo"
+                        android:transitionName="device_image_transition" />
+                </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <RelativeLayout
+            <!-- Main Info Section -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp">
+                android:layout_marginTop="28dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@id/actionsContainer"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
@@ -100,39 +118,37 @@
                         android:fontFamily="sans-serif-black"
                         android:text="Laptop Dell XPS 15"
                         android:textColor="@color/on_surface"
-                        android:textSize="28sp"
+                        android:textSize="26sp"
                         android:letterSpacing="-0.02" />
 
-                    <com.google.android.material.chip.Chip
+                    <TextView
                         android:id="@+id/statusChip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Garantía Activa"
-                        app:chipBackgroundColor="@color/success_container"
-                        android:textColor="@color/on_success_container"
-                        app:chipStrokeWidth="0dp"
-                        app:chipCornerRadius="8dp"
+                        android:layout_marginTop="6dp"
+                        android:text="ACTIVO"
+                        android:textColor="@color/brand_blue"
+                        android:textSize="12sp"
                         android:textStyle="bold"
-                        android:textSize="12sp" />
+                        android:letterSpacing="0.05"
+                        android:background="@drawable/bg_status_badge"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"/>
                 </LinearLayout>
 
+                <!-- Action Buttons -->
                 <LinearLayout
-                    android:id="@+id/actionsContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
                     android:orientation="horizontal">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardEdit"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/brand_blue_light"
+                        app:cardBackgroundColor="#E8F1FF"
                         app:cardCornerRadius="14dp"
                         app:cardElevation="0dp">
                         <ImageView
@@ -145,13 +161,12 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardDelete"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="12dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="10dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="#FFF1F1"
+                        app:cardBackgroundColor="#FFF0F0"
                         app:cardCornerRadius="14dp"
                         app:cardElevation="0dp">
                         <ImageView
@@ -159,85 +174,106 @@
                             android:layout_height="match_parent"
                             android:padding="12dp"
                             android:src="@drawable/ic_delete"
-                            app:tint="#FF3B30" />
+                            app:tint="#FF4B4B" />
                     </com.google.android.material.card.MaterialCardView>
-
                 </LinearLayout>
-            </RelativeLayout>
+            </LinearLayout>
 
+            <!-- Technical Sheet -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:text="Ficha Técnica"
+                android:layout_marginTop="36dp"
+                android:text="ESPECIFICACIONES TÉCNICAS"
                 android:textStyle="bold"
-                android:textColor="@color/brand_blue"
-                android:textSize="14sp"
-                android:textAllCaps="true"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="11sp"
                 android:letterSpacing="0.1" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="28dp"
+                app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
                 app:strokeColor="#EEF1F9"
-                app:strokeWidth="1.5dp">
+                app:strokeWidth="1dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:gravity="center_vertical"
-                        android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Marca" android:textColor="@color/on_surface_variant" android:textSize="15sp" />
-                        <TextView android:id="@+id/tvBrand" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Dell" android:textStyle="bold" android:textColor="@color/on_surface" android:textSize="15sp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Marca" android:textColor="@color/on_surface_variant" android:textSize="14sp" />
+                        <TextView android:id="@+id/tvBrand" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="end" android:text="Dell" android:textStyle="bold" android:textColor="@color/on_surface" android:textSize="14sp" />
                     </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F0F3FC" android:layout_marginHorizontal="16dp" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F4F6FB" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:gravity="center_vertical"
-                        android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Modelo" android:textColor="@color/on_surface_variant" android:textSize="15sp" />
-                        <TextView android:id="@+id/tvModel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="XPS 15 9520" android:textStyle="bold" android:textColor="@color/on_surface" android:textSize="15sp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Modelo" android:textColor="@color/on_surface_variant" android:textSize="14sp" />
+                        <TextView android:id="@+id/tvModel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="end" android:text="XPS 15" android:textStyle="bold" android:textColor="@color/on_surface" android:textSize="14sp" />
                     </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F0F3FC" android:layout_marginHorizontal="16dp" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F4F6FB" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:gravity="center_vertical"
-                        android:paddingHorizontal="16dp">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="S/N" android:textColor="@color/on_surface_variant" android:textSize="15sp" />
-                        <TextView android:id="@+id/tvSerial" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="DL-XPS15-9876" android:textStyle="bold" android:textColor="@color/on_surface" android:textSize="15sp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Serie" android:textColor="@color/on_surface_variant" android:textSize="14sp" />
+                        <TextView android:id="@+id/tvSerial" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="end" android:text="SN-12345" android:textStyle="bold" android:textColor="@color/on_surface" android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- History Section -->
+            <TextView
+                android:id="@+id/tvHistoryTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:text="HISTORIAL DE SERVICIO"
+                android:textStyle="bold"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="11sp"
+                android:letterSpacing="0.1"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRepairHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone"
+                tools:listitem="@layout/item_repair_card" />
+
+            <!-- Support Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSupport"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="40dp"
                 android:text="Solicitar Soporte Técnico"
                 android:textAllCaps="false"
-                android:textSize="18sp"
-                android:textStyle="bold"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-black"
                 app:cornerRadius="20dp"
                 app:backgroundTint="@color/brand_blue"
                 app:icon="@drawable/ic_build"
                 app:iconGravity="textStart"
-                app:iconPadding="12dp"
                 app:elevation="4dp" />
 
         </LinearLayout>

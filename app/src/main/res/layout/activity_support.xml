@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface_bright">
+    android:background="@color/surface_bright"
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -15,15 +16,12 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:paddingTop="48dp"
+            android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="@color/on_surface"
-            app:title="Soporte Técnico"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge" />
-
+            app:navigationIconTint="@color/brand_blue"
+            app:title="Centro de Soporte"
+            app:titleTextColor="@color/login_primary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -36,41 +34,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="20dp"
+            android:paddingBottom="60dp">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_help"
+                app:tint="@color/brand_blue" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-black"
-                android:text="Solicitar Asistencia"
+                android:text="¿Cómo podemos ayudarte?"
                 android:textColor="@color/on_surface"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textSize="24sp"
+                android:letterSpacing="-0.02" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Describe el problema para que un técnico pueda ayudarte."
+                android:text="Envíanos una consulta y te responderemos con una cotización personalizada."
                 android:textColor="@color/on_surface_variant"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
 
+            <!-- Form -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilProblemType"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:hint="Tipo de Problema"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
+                android:layout_marginTop="24dp"
+                android:hint="Naturaleza del problema"
+                app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp" app:boxCornerRadiusBottomEnd="16dp">
                 <AutoCompleteTextView
                     android:id="@+id/atvProblemType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none" />
+                    android:inputType="none"
+                    android:textColor="@color/on_surface" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -78,30 +84,92 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Descripción detallada"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
+                android:hint="Describe tu falla aquí..."
+                app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp" app:boxCornerRadiusBottomEnd="16dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDescription"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="140dp"
                     android:gravity="top"
+                    android:textColor="@color/on_surface"
                     android:inputType="textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSubmit"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="40dp"
-                android:text="Enviar Solicitud"
-                android:textAllCaps="false"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:cornerRadius="16dp"
+                android:layout_height="64dp"
+                android:layout_marginTop="32dp"
+                android:text="Enviar a Soporte"
+                android:fontFamily="sans-serif-black"
+                app:cornerRadius="20dp"
                 app:backgroundTint="@color/brand_blue" />
+
+            <!-- Maps Section (Option 2) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:text="Visítanos en Tienda"
+                android:textStyle="bold"
+                android:textColor="@color/login_primary"
+                android:textSize="14sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnOpenMap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/outline_variant"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_laptop" /> <!-- Placeholder for Map Image -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sede Trujillo"
+                                android:textStyle="bold"
+                                android:textColor="@color/on_surface"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Av. Nicolás de Piérola 123, Trujillo"
+                                android:textSize="12sp"
+                                android:textColor="@color/on_surface_variant"/>
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_search"
+                            app:tint="@color/brand_blue"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
