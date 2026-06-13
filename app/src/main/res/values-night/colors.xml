@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Colors -->
+    <color name="white">#FF121212</color> <!-- In dark mode, white background becomes dark -->
+    <color name="black">#FFFFFFFF</color>
+
+    <color name="surface_bright">#1A1C1E</color>
+    <color name="surface_container">#2F3033</color>
+    <color name="surface_container_low">#1E1F21</color>
+    <color name="surface_container_lowest">#121212</color>
+
+    <color name="on_surface">#E2E2E6</color>
+    <color name="on_surface_variant">#C3C6D1</color>
+    <color name="outline">#8E9199</color>
+    <color name="outline_variant">#44474E</color>
+
+    <color name="brand_blue">#D1E4FF</color>
+    <color name="brand_blue_light">#1D2A3D</color>
+    <color name="login_primary">#D1E4FF</color>
+    <color name="login_background">#1A1C1E</color>
+    <color name="login_on_surface">#E2E2E6</color>
+    <color name="login_on_surface_variant">#C3C6D1</color>
+    <color name="login_text_secondary">#C3C6D1</color>
+
+    <!-- Login Gradient -->
+    <color name="login_gradient_start">#121212</color>
+    <color name="login_gradient_end">#1A1C1E</color>
+</resources>

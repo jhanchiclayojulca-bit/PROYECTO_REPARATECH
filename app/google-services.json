@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "249674044222",
+    "project_id": "reparatech-38983",
+    "storage_bucket": "reparatech-38983.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249674044222:android:e72017eda19a61f841526f",
+        "android_client_info": {
+          "package_name": "com.cibertec.cibertecapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj0_MJanvLUBoxlgYk03hNicmqgsfT174"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
