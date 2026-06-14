@@ -72,8 +72,26 @@ class RequestsActivity : AppCompatActivity() {
             }
             startActivity(intent)
         } else {
-            // Mostrar diálogo con detalles o comentario del admin
+            // Mostrar diálogo con detalles para solicitudes pendientes o rechazadas
+            showRequestDetailsDialog(req)
         }
+    }
+
+    private fun showRequestDetailsDialog(req: QuotationRequest) {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle("Detalles de Solicitud")
+            .setMessage("""
+                ID: #REQ-${req.id.takeLast(5).uppercase()}
+                Equipo: ${req.brandAndModel}
+                Estado: ${req.status}
+                
+                Descripción:
+                ${req.problemDescription}
+                
+                ${if (req.adminComment.isNotEmpty()) "\nRespuesta del técnico:\n${req.adminComment}" else "\nEstamos procesando tu solicitud. Te notificaremos cuando tengamos un presupuesto listo."}
+            """.trimIndent())
+            .setPositiveButton("Entendido", null)
+            .show()
     }
 
     private fun setupBottomNavigation() {

@@ -55,12 +55,10 @@ class RepairDetailActivity : AppCompatActivity() {
                     binding.tvStatus.text = it.status.uppercase()
                     binding.tvDescription.text = it.service
 
-                    // Separar Marca y Modelo
                     val parts = it.deviceName.split(" ", limit = 2)
                     binding.tvBrand.text = parts.getOrNull(0) ?: "-"
                     binding.tvModel.text = parts.getOrNull(1) ?: "-"
                     
-                    // Mostrar Forma de Entrega (Textos amigables para el cliente)
                     binding.tvLogistics.text = if (it.deliveryMethod == "Recogida") 
                         "Recojo a domicilio programado" 
                     else 
@@ -69,20 +67,17 @@ class RepairDetailActivity : AppCompatActivity() {
                     binding.repairProgress.progress = it.progress
                     binding.tvProgressLabel.text = "Progreso de reparación: ${it.progress}%"
 
-                    // Desglose de costos
                     binding.tvBaseCost.text = String.format(Locale.getDefault(), "S/.%.2f", it.baseCost)
                     binding.tvTax.text = String.format(Locale.getDefault(), "S/.%.2f", it.tax)
                     binding.tvAdditionalCost.text = String.format(Locale.getDefault(), "S/.%.2f", it.additionalCost)
                     binding.tvTotal.text = String.format(Locale.getDefault(), "S/.%.2f", it.total)
 
-                    // Imagen con Coil
                     binding.ivDeviceImage.load(it.photoUrl) {
                         crossfade(true)
                         placeholder(R.drawable.ic_laptop)
                         error(R.drawable.ic_laptop)
                     }
 
-                    // Colores de estado
                     when(it.status.uppercase()) {
                         "COMPLETADO" -> {
                             binding.cardStatus.setCardBackgroundColor(getColor(R.color.status_green_bg))
