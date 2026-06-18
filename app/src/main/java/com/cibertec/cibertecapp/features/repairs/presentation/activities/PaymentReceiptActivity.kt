@@ -45,6 +45,7 @@ class PaymentReceiptActivity : AppCompatActivity() {
     }
 
     private fun displayReceipt(request: RepairRequest) {
+        binding.tvReceiptOrderId.text = request.orderId
         binding.tvReceiptDeviceName.text = request.brandAndModel
         binding.tvReceiptServiceType.text = "Reparación ${request.serviceType}"
         binding.tvReceiptBaseCost.text = String.format(Locale.getDefault(), "S/.%.2f", request.baseCost + request.tax)
@@ -102,7 +103,7 @@ class PaymentReceiptActivity : AppCompatActivity() {
         paint.isFakeBoldText = true
         canvas.drawText("ID DE ORDEN:", leftX, y, paint)
         paint.isFakeBoldText = false
-        canvas.drawText(request.orderId, leftX + 100, y, paint)
+        canvas.drawText(request.orderId.ifEmpty { "N/A" }, leftX + 110, y, paint)
         
         y += 30f
         paint.isFakeBoldText = true

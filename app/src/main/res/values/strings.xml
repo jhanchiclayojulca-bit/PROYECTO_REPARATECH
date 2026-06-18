@@ -39,4 +39,9 @@
     <string name="toggle_visibility">Toggle Visibility</string>
     <string name="branding_illustration">Branding Illustration</string>
     <string name="service_technical">Servicio Técnico</string>
+
+    <!-- Mercado Pago (Reemplaza con tu TEST-...) -->
+    <string name="mercadopago_public_key">TESTUSER8483311900307779765</string>
+    <string name="mercadopago_demo_link">https://mpago.la/2Jcu2wG</string>
+    <string name="mercadopago_access_token">APP_USR-1627960419855721-061620-78bf305067bf0f20cb643d7819202ffd-3479409406</string>
 </resources>

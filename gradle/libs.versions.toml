@@ -19,6 +19,7 @@ firebaseBom = "33.1.0"
 okhttp = "4.12.0"
 googleAuth = "21.2.0"
 room = "2.6.1"
+mercadopago = "4.64.0"
 
 [libraries]
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
@@ -49,6 +50,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 google-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "googleAuth" }
+mercadopago = { group = "com.mercadopago.android.px", name = "checkout", version.ref = "mercadopago" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

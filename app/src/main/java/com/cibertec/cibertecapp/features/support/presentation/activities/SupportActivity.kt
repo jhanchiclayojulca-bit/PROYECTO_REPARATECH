@@ -59,24 +59,6 @@ class SupportActivity : AppCompatActivity() {
                 viewModel.sendSupportRequest(deviceName, category, problemType, description)
             }
         }
-
-        // Google Maps Listener
-        binding.btnOpenMap.setOnClickListener {
-            try {
-                val gmmIntentUri = Uri.parse("geo:-8.111677,-79.028581?q=Cibertec+Trujillo")
-                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                mapIntent.setPackage("com.google.android.apps.maps")
-                if (mapIntent.resolveActivity(packageManager) != null) {
-                    startActivity(mapIntent)
-                } else {
-                    // Fallback a navegador si no hay Maps app
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/search/?api=1&query=Cibertec+Trujillo"))
-                    startActivity(browserIntent)
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this, "No se pudo abrir el mapa", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private fun observeViewModel() {

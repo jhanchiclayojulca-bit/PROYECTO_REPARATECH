@@ -47,8 +47,8 @@ class ProfileActivity : AppCompatActivity() {
                 
                 binding.profileAvatarLarge.load(state.avatarUrl) {
                     crossfade(true)
-                    placeholder(R.drawable.ic_person)
-                    error(R.drawable.ic_person)
+                    placeholder(R.mipmap.ic_launcher)
+                    error(R.mipmap.ic_launcher)
                     transformations(CircleCropTransformation())
                 }
 

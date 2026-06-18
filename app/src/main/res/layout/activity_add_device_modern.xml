@@ -1,220 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:fillViewport="true"
-    android:fitsSystemWindows="true">
+    android:background="@color/surface_bright">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:paddingBottom="40dp">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Header Row -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnBack"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            app:icon="@drawable/ic_arrow_back"
-            app:iconTint="@color/brand_blue"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:fontFamily="sans-serif-black"
-            android:text="Registrar Nuevo Equipo"
-            android:textColor="@color/login_primary"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@id/btnBack"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btnBack"
-            app:layout_constraintTop_toTopOf="@id/btnBack" />
-
-        <TextView
-            android:id="@+id/tvSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Guarda tu equipo para futuras reparaciones"
-            android:textColor="@color/on_surface_variant"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@id/tvTitle"
-            app:layout_constraintTop_toBottomOf="@id/tvTitle" />
-
-        <!-- Section 1: Category -->
-        <TextView
-            android:id="@+id/tvSection1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="1. Elige el tipo de equipo"
-            android:textStyle="bold"
-            android:textColor="@color/login_primary"
-            app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <HorizontalScrollView
-            android:id="@+id/hsvCategories"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:clipToPadding="false"
-            android:scrollbars="none"
-            app:layout_constraintTop_toBottomOf="@id/tvSection1">
-            <LinearLayout
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="100dp">
+
+            <!-- Header Row -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBack"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:icon="@drawable/ic_arrow_back"
+                app:iconTint="@color/brand_blue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif-black"
+                android:text="Registrar Nuevo Equipo"
+                android:textColor="@color/login_primary"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="@id/btnBack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnBack"
+                app:layout_constraintTop_toTopOf="@id/btnBack" />
+
+            <TextView
+                android:id="@+id/tvSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <include android:id="@+id/cardSmartphone" layout="@layout/item_category_chip" />
-                <include android:id="@+id/cardLaptop" layout="@layout/item_category_chip" />
-                <include android:id="@+id/cardTablet" layout="@layout/item_category_chip" />
-                <include android:id="@+id/cardGaming" layout="@layout/item_category_chip" />
-            </LinearLayout>
-        </HorizontalScrollView>
+                android:layout_marginTop="4dp"
+                android:text="Guarda tu equipo para futuras reparaciones"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@id/tvTitle"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-        <!-- Section 2: Photo -->
-        <TextView
-            android:id="@+id/tvSection2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="2. Foto del equipo"
-            android:textStyle="bold"
-            android:textColor="@color/login_primary"
-            app:layout_constraintTop_toBottomOf="@id/hsvCategories"
-            app:layout_constraintStart_toStartOf="parent"/>
+            <!-- Section 1: Category -->
+            <TextView
+                android:id="@+id/tvSection1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="1. Elige el tipo de equipo"
+                android:textStyle="bold"
+                android:textColor="@color/login_primary"
+                app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
+                app:layout_constraintStart_toStartOf="parent"/>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardUpload"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginTop="12dp"
-            app:cardBackgroundColor="#F8F9FD"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/outline_variant"
-            app:strokeWidth="1dp"
-            app:layout_constraintTop_toBottomOf="@id/tvSection2">
-            <FrameLayout
+            <HorizontalScrollView
+                android:id="@+id/hsvCategories"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:id="@+id/ivPreview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:clipToPadding="false"
+                android:scrollbars="none"
+                app:layout_constraintTop_toBottomOf="@id/tvSection1">
                 <LinearLayout
-                    android:id="@+id/layoutEmptyPhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_add" app:tint="@color/brand_blue"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Subir foto del equipo" android:layout_marginTop="8dp" android:textColor="@color/brand_blue" android:textStyle="bold"/>
+                    android:orientation="horizontal">
+                    <include android:id="@+id/cardSmartphone" layout="@layout/item_category_chip" />
+                    <include android:id="@+id/cardLaptop" layout="@layout/item_category_chip" />
+                    <include android:id="@+id/cardTablet" layout="@layout/item_category_chip" />
+                    <include android:id="@+id/cardGaming" layout="@layout/item_category_chip" />
                 </LinearLayout>
-            </FrameLayout>
-        </com.google.android.material.card.MaterialCardView>
+            </HorizontalScrollView>
 
-        <!-- Section 3: Details -->
-        <TextView
-            android:id="@+id/tvSection3"
+            <!-- Section 2: Photo -->
+            <TextView
+                android:id="@+id/tvSection2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="2. Foto del equipo"
+                android:textStyle="bold"
+                android:textColor="@color/login_primary"
+                app:layout_constraintTop_toBottomOf="@id/hsvCategories"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardUpload"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#F8F9FD"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/outline_variant"
+                app:strokeWidth="1dp"
+                app:layout_constraintTop_toBottomOf="@id/tvSection2">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/ivPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+                    <LinearLayout
+                        android:id="@+id/layoutEmptyPhoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_add" app:tint="@color/brand_blue"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Subir foto del equipo" android:layout_marginTop="8dp" android:textColor="@color/brand_blue" android:textStyle="bold"/>
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Section 3: Details -->
+            <TextView
+                android:id="@+id/tvSection3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="3. Información técnica"
+                android:textStyle="bold"
+                android:textColor="@color/login_primary"
+                app:layout_constraintTop_toBottomOf="@id/cardUpload"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilBrand"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Marca (ej: Apple)"
+                app:startIconDrawable="@drawable/ic_laptop"
+                app:startIconTint="@color/brand_blue"
+                app:layout_constraintTop_toBottomOf="@id/tvSection3">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etBrand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/login_primary"
+                    android:inputType="textCapWords" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilModel"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Modelo (ej: iPhone 15 Pro)"
+                app:startIconDrawable="@drawable/ic_devices"
+                app:startIconTint="@color/brand_blue"
+                app:layout_constraintTop_toBottomOf="@id/tilBrand">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etModel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/login_primary"
+                    android:inputType="textCapWords" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilSerial"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Número de Serie"
+                app:startIconDrawable="@drawable/ic_build"
+                app:startIconTint="@color/brand_blue"
+                app:layout_constraintTop_toBottomOf="@id/tilModel">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSerial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/login_primary"
+                    android:inputType="textCapCharacters" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSaveDevice"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="30dp"
+                android:text="Guardar Equipo"
+                android:fontFamily="sans-serif-black"
+                app:cornerRadius="20dp"
+                app:backgroundTint="@color/brand_blue"
+                app:layout_constraintTop_toBottomOf="@id/tilSerial" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Overlay de Carga -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B3000000"
+        android:elevation="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="3. Información técnica"
-            android:textStyle="bold"
-            android:textColor="@color/login_primary"
-            app:layout_constraintTop_toBottomOf="@id/cardUpload"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilBrand"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Marca (ej: Apple)"
-            app:startIconDrawable="@drawable/ic_laptop"
-            app:startIconTint="@color/brand_blue"
-            app:layout_constraintTop_toBottomOf="@id/tvSection3">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etBrand"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/login_primary"
-                android:inputType="textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilModel"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Modelo (ej: iPhone 15 Pro)"
-            app:startIconDrawable="@drawable/ic_devices"
-            app:startIconTint="@color/brand_blue"
-            app:layout_constraintTop_toBottomOf="@id/tilBrand">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etModel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/login_primary"
-                android:inputType="textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilSerial"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Número de Serie"
-            app:startIconDrawable="@drawable/ic_build"
-            app:startIconTint="@color/brand_blue"
-            app:layout_constraintTop_toBottomOf="@id/tilModel">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etSerial"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/login_primary"
-                android:inputType="textCapCharacters" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSaveDevice"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginTop="30dp"
-            android:text="Guardar Equipo"
-            android:fontFamily="sans-serif-black"
-            app:cornerRadius="20dp"
-            app:backgroundTint="@color/brand_blue"
-            app:layout_constraintTop_toBottomOf="@id/tilSerial" />
-
-
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="32dp">
+
+                <ProgressBar
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:indeterminateTint="@color/brand_blue" />
+
+                <TextView
+                    android:id="@+id/tvLoadingMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Procesando..."
+                    android:textColor="@color/on_surface"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Guardando datos del equipo"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

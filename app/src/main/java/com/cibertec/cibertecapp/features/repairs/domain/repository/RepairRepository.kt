@@ -5,4 +5,5 @@ import com.cibertec.cibertecapp.features.repairs.domain.model.RepairRequest
 
 interface RepairRepository {
     suspend fun createRepair(request: RepairRequest, imageUri: Uri?): Result<Unit>
+    suspend fun deleteRepair(repairId: String): Result<Unit>
 }

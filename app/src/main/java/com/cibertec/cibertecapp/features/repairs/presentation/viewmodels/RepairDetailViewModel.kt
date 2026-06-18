@@ -18,6 +18,9 @@ class RepairDetailViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    private val _isDeleted = MutableStateFlow(false)
+    val isDeleted: StateFlow<Boolean> = _isDeleted
+
     fun loadRepairDetails(repairId: String) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -51,6 +54,21 @@ class RepairDetailViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 android.util.Log.e("RepairDetail", "Error loading: ${e.message}")
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun cancelRepair() {
+        val repairId = _repair.value?.id ?: return
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                db.collection("repairs").document(repairId).delete().await()
+                _isDeleted.value = true
+            } catch (e: Exception) {
+                android.util.Log.e("RepairDetail", "Error deleting: ${e.message}")
             } finally {
                 _isLoading.value = false
             }

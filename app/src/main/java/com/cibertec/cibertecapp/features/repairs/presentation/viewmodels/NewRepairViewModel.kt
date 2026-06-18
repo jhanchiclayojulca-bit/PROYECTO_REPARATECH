@@ -200,7 +200,11 @@ class NewRepairViewModel(application: Application) : AndroidViewModel(applicatio
                 )
                 val result = createRepairUseCase(finalRequest, _selectedImageUri.value)
                 result.onSuccess {
-                    _state.update { it.copy(isLoading = false, isSuccess = true) }
+                    _state.update { it.copy(
+                        isLoading = false, 
+                        isSuccess = true,
+                        request = finalRequest // Actualizamos la solicitud con el ID generado
+                    ) }
                 }.onFailure { error ->
                     _state.update { it.copy(isLoading = false, error = error.message) }
                 }

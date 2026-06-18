@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -64,6 +65,10 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
         binding.btnGoogleLogin.setOnClickListener {
+            // Mostrar carga antes de abrir el selector de Google para mejor UX
+            binding.loadingOverlay.visibility = View.VISIBLE
+            binding.tvLoadingMessage.text = "Conectando con Google..."
+
             googleSignInClient.signOut().addOnCompleteListener {
                 val signInIntent = googleSignInClient.signInIntent
                 googleSignInLauncher.launch(signInIntent)
@@ -140,12 +145,9 @@ class LoginActivity : AppCompatActivity() {
             viewModel.state.collect { state ->
                 binding.btnlogin.isEnabled = !state.isLoading
                 binding.btnGoogleLogin.isEnabled = !state.isLoading
-
-                if (state.isLoading) {
-                    binding.btnlogin.text = "Cargando..."
-                } else {
-                    binding.btnlogin.text = "Entrar"
-                }
+                
+                // Mostrar/Ocultar Overlay de Carga
+                binding.loadingOverlay.visibility = if (state.isLoading) View.VISIBLE else View.GONE
 
                 if (state.isSuccess) {
                     startActivity(Intent(this@LoginActivity, HomeActivity::class.java))

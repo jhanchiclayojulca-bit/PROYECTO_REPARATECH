@@ -56,6 +56,15 @@ class RepairRepositoryImpl(private val context: Context) : RepairRepository {
         }
     }
 
+    override suspend fun deleteRepair(repairId: String): Result<Unit> {
+        return try {
+            db.collection("repairs").document(repairId).delete().await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     private fun RepairRequest.toEntity(userId: String) = RepairEntity(
         id = id,
         orderId = orderId,

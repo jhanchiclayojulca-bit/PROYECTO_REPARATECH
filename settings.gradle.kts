@@ -19,6 +19,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        maven { url = java.net.URI("https://maven.artifacts.mercadolibre.com/releases") }
     }
 }
 

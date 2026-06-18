@@ -506,14 +506,93 @@
                         android:lineSpacingExtra="4dp" />
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnStartSupport"
                         style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="20dp"
-                        android:text="Iniciar Chat de Soporte"
+                        android:text="Enviar Consulta Técnica"
                         android:textAllCaps="false"
                         android:textStyle="bold"
                         app:cornerRadius="16dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Nueva Tarjeta de Ubicación en Trujillo -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="32dp"
+                android:text="Nuestra Sede Central"
+                android:textStyle="bold"
+                android:textColor="@color/on_surface"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/outline_variant"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:scaleType="centerInside"
+                        android:padding="24dp"
+                        android:src="@mipmap/ic_launcher"
+                        android:background="@drawable/bg_location_banner" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ReparaTech Trujillo"
+                                android:textStyle="bold"
+                                android:textColor="@color/brand_blue"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Av. Nicolás de Piérola 123"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            style="@style/Widget.Material3.Button.IconButton"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            app:icon="@drawable/ic_home"
+                            app:iconTint="@color/brand_blue" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

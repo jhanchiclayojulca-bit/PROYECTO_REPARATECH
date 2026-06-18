@@ -2,6 +2,8 @@ package com.cibertec.cibertecapp.features.repairs.presentation.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -10,6 +12,7 @@ import com.cibertec.cibertecapp.R
 import com.cibertec.cibertecapp.databinding.ActivityRepairDetailBinding
 import com.cibertec.cibertecapp.features.repairs.presentation.viewmodels.RepairDetailViewModel
 import com.cibertec.cibertecapp.features.support.presentation.activities.SupportActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -44,6 +47,21 @@ class RepairDetailActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+
+        binding.btnCancelRepair.setOnClickListener {
+            showCancelConfirmation()
+        }
+    }
+
+    private fun showCancelConfirmation() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("¿Cancelar reparación?")
+            .setMessage("Esta acción es irreversible y eliminará el registro de reparación.")
+            .setPositiveButton("Sí, cancelar") { _, _ ->
+                viewModel.cancelRepair()
+            }
+            .setNegativeButton("Volver", null)
+            .show()
     }
 
     private fun observeViewModel() {
@@ -78,6 +96,10 @@ class RepairDetailActivity : AppCompatActivity() {
                         error(R.drawable.ic_laptop)
                     }
 
+                    // Mostrar botón de cancelar SOLO si el estado es PENDIENTE
+                    binding.btnCancelRepair.visibility = if (it.status.uppercase() == "PENDIENTE") 
+                        View.VISIBLE else View.GONE
+
                     when(it.status.uppercase()) {
                         "COMPLETADO" -> {
                             binding.cardStatus.setCardBackgroundColor(getColor(R.color.status_green_bg))
@@ -96,6 +118,15 @@ class RepairDetailActivity : AppCompatActivity() {
                             binding.tvStatus.setTextColor(getColor(R.color.brand_blue))
                         }
                     }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.isDeleted.collect { isDeleted ->
+                if (isDeleted) {
+                    Toast.makeText(this@RepairDetailActivity, "Reparación cancelada con éxito", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
             }
         }

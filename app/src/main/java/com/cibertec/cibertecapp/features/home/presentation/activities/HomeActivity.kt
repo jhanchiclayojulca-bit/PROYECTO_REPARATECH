@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import android.widget.LinearLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 
 class HomeActivity : AppCompatActivity() {
 
@@ -82,8 +83,8 @@ class HomeActivity : AppCompatActivity() {
                     
                     binding.avatarImage.load(state.userPhotoUrl) {
                         crossfade(true)
-                        placeholder(R.drawable.ic_person)
-                        error(R.drawable.ic_person)
+                        placeholder(R.mipmap.ic_launcher)
+                        error(R.mipmap.ic_launcher)
                         transformations(CircleCropTransformation())
                     }
                 }
@@ -113,8 +114,34 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, DevicesActivity::class.java))
         }
 
+        binding.cardLocation.setOnClickListener {
+            openTrujilloMap()
+        }
+
+        binding.btnStartSupport.setOnClickListener {
+            startActivity(Intent(this, com.cibertec.cibertecapp.features.support.presentation.activities.SupportActivity::class.java))
+        }
+
         binding.btnLogout.setOnClickListener {
             showLogoutConfirmation()
+        }
+    }
+
+    private fun openTrujilloMap() {
+        try {
+            // Usamos el formato q=lat,log(Etiqueta) para que Google Maps ponga un PIN rojo exacto
+            val gmmIntentUri = android.net.Uri.parse("geo:0,0?q=-8.111677,-79.028581(ReparaTech+Trujillo)")
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            if (mapIntent.resolveActivity(packageManager) != null) {
+                startActivity(mapIntent)
+            } else {
+                // Fallback al navegador con marcador exacto
+                val browserIntent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://www.google.com/maps/search/?api=1&query=-8.111677,-79.028581"))
+                startActivity(browserIntent)
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "No se pudo abrir el mapa", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -131,14 +131,16 @@ class AddDeviceActivity : AppCompatActivity() {
     private fun observeState() {
         lifecycleScope.launch {
             viewModel.state.collect { state ->
-                binding.progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+                // Mostrar/Ocultar Overlay de Carga profesional
+                binding.loadingOverlay.visibility = if (state.isLoading) View.VISIBLE else View.GONE
                 binding.btnSaveDevice.isEnabled = !state.isLoading
 
                 if (state.isSuccess) {
                     binding.tvTitle.text = "¡Todo listo!"
-                    binding.btnSaveDevice.text = "Sincronizando..."
+                    // Cambiar mensaje del overlay si es necesario
+                    binding.tvLoadingMessage.text = "¡Éxito!"
                     
-                    delay(1500) // Pausa de seguridad
+                    delay(1500)
                     
                     val message = if (isEditMode) "Equipo actualizado" else "Equipo registrado con éxito"
                     Toast.makeText(this@AddDeviceActivity, message, Toast.LENGTH_SHORT).show()

@@ -260,35 +260,6 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardPayBank"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="16dp"
-            app:strokeColor="@color/outline_variant"
-            app:strokeWidth="2dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-                <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_list_alt" app:tint="@color/on_surface_variant"/>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Depósito Bancario" android:textStyle="bold" android:textColor="@color/on_surface"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Transferencia o agente" android:textSize="12sp" android:textColor="@color/on_surface_variant"/>
-                </LinearLayout>
-                <RadioButton android:id="@+id/rbPayBank" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false" android:clickable="false"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"

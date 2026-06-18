@@ -89,7 +89,7 @@
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ID DE TRANSACCIÓN" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/on_surface_variant"/>
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#TXN-98234-RT" android:textStyle="bold" android:textColor="@color/on_surface"/>
+                            <TextView android:id="@+id/tvReceiptOrderId" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#TXN-00000-RT" android:textStyle="bold" android:textColor="@color/on_surface"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="end">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="FECHA" android:textSize="10sp" android:textStyle="bold" android:textColor="@color/on_surface_variant"/>

@@ -80,6 +80,9 @@ dependencies {
     // Google Auth
     implementation(libs.google.auth)
 
+    // SOLUCIÓN PAGOS 2025: Navegador Seguro (Evita errores de versión de SDK antiguos)
+    implementation("androidx.browser:browser:1.8.0")
+
     // Biometrics
     implementation("androidx.biometric:biometric:1.1.0")
 

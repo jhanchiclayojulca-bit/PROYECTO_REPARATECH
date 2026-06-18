@@ -331,7 +331,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginTop="40dp"
-                android:layout_marginBottom="32dp"
                 android:text="Contactar con Soporte"
                 android:textAllCaps="false"
                 android:textSize="16sp"
@@ -339,6 +338,21 @@
                 app:cornerRadius="20dp"
                 app:icon="@drawable/ic_help"
                 app:iconGravity="textStart" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelRepair"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp"
+                android:text="Cancelar Reparación"
+                android:textColor="#D32F2F"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:icon="@drawable/ic_delete"
+                app:iconTint="#D32F2F" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

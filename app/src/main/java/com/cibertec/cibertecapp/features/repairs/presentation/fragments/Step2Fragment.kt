@@ -52,7 +52,7 @@ class Step2Fragment : Fragment() {
     }
 
     private fun showStoreAddressInfo() {
-        Toast.makeText(requireContext(), "Encuentra nuestra direccion en la sección de Centro de Ayuda.", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), "Puedes encontrar la dirección de nuestra tienda al final de la pantalla de Inicio.", Toast.LENGTH_LONG).show()
     }
 
     private fun checkAddressAndSelectDelivery() {

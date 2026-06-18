@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="135"
+                android:startColor="#01040D"
+                android:endColor="#102542"
+                android:type="linear" />
+        </shape>
+    </item>
+    <item
+        android:drawable="@drawable/ic_dot_pattern"
+        android:alpha="0.2"
+        android:gravity="center"
+        android:tileMode="repeat" />
+</layer-list>

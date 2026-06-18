@@ -8,17 +8,14 @@ import com.cibertec.cibertecapp.features.home.domain.model.Repair
 import com.cibertec.cibertecapp.features.home.domain.usecases.FilterRepairsByCategoryUseCase
 import com.cibertec.cibertecapp.features.home.domain.usecases.GetRepairsUseCase
 import com.cibertec.cibertecapp.features.home.domain.usecases.SearchRepairsUseCase
+import com.cibertec.cibertecapp.features.repairs.presentation.state.RepairsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class RepairsState(
-    val repairs: List<Repair> = emptyList(),
-    val isLoading: Boolean = false,
-    val error: String? = null
-)
+
 
 class RepairsViewModel(application: Application) : AndroidViewModel(application) {
 
