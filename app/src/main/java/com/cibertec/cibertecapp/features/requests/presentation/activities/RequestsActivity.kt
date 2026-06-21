@@ -2,12 +2,16 @@ package com.cibertec.cibertecapp.features.requests.presentation.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.cibertec.cibertecapp.R
 import com.cibertec.cibertecapp.databinding.ActivityRequestsListBinding
 import com.cibertec.cibertecapp.features.home.presentation.activities.HomeActivity
@@ -17,6 +21,7 @@ import com.cibertec.cibertecapp.features.repairs.presentation.activities.Repairs
 import com.cibertec.cibertecapp.features.requests.domain.model.QuotationRequest
 import com.cibertec.cibertecapp.features.requests.presentation.adapters.QuotationAdapter
 import com.cibertec.cibertecapp.features.requests.presentation.viewmodels.RequestsViewModel
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -54,9 +59,10 @@ class RequestsActivity : AppCompatActivity() {
     }
 
     private fun setupRecycler() {
-        adapter = QuotationAdapter { req ->
-            handleRequestClick(req)
-        }
+        adapter = QuotationAdapter(
+            onClick = { req -> handleRequestClick(req) },
+            onRejectClick = { req -> showConfirmCancelDialog(req.id) }
+        )
         binding.rvRequests.apply {
             adapter = this@RequestsActivity.adapter
             layoutManager = LinearLayoutManager(this@RequestsActivity)
@@ -65,53 +71,121 @@ class RequestsActivity : AppCompatActivity() {
 
     private fun handleRequestClick(req: QuotationRequest) {
         if (req.status.uppercase() == "COTIZADO") {
-            MaterialAlertDialogBuilder(this)
-                .setTitle("Cotización Recibida")
-                .setMessage("¿Qué deseas hacer con esta solicitud?")
-                .setPositiveButton("Aceptar y Pagar") { _, _ ->
-                    val intent = Intent(this, NewRepairActivity::class.java).apply {
-                        putExtra("FROM_QUOTATION", true)
-                        putExtra("QUOTATION_DATA", req)
-                    }
-                    startActivity(intent)
-                }
-                .setNeutralButton("Cancelar Solicitud") { _, _ ->
-                    showConfirmCancelDialog(req.id)
-                }
-                .setNegativeButton("Cerrar", null)
-                .show()
+            // Si está cotizado, al dar clic en la tarjeta o botón principal (Aceptar)
+            // podemos o mostrar el detalle o ir directo. Por consistencia, mostramos el detalle
+            // donde ya tiene los botones configurados.
+            showRequestDetailsDialog(req)
         } else {
             showRequestDetailsDialog(req)
         }
     }
 
     private fun showRequestDetailsDialog(req: QuotationRequest) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Detalles de Solicitud")
-            .setMessage("""
-                ID: #REQ-${req.id.takeLast(5).uppercase()}
-                Equipo: ${req.brandAndModel}
-                Estado: ${req.status}
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_request_details, null)
+        
+        val ivIcon = dialogView.findViewById<ImageView>(R.id.ivStatusIcon)
+        val tvStatus = dialogView.findViewById<TextView>(R.id.tvStatusTitle)
+        val tvId = dialogView.findViewById<TextView>(R.id.tvRequestId)
+        val ivThumb = dialogView.findViewById<ImageView>(R.id.ivDeviceThumb)
+        val tvName = dialogView.findViewById<TextView>(R.id.tvDeviceName)
+        val tvSerial = dialogView.findViewById<TextView>(R.id.tvDeviceSerial)
+        val tvDesc = dialogView.findViewById<TextView>(R.id.tvProblemDesc)
+        val layoutAdmin = dialogView.findViewById<View>(R.id.layoutAdminResp)
+        val tvAdmin = dialogView.findViewById<TextView>(R.id.tvAdminComment)
+        val layoutPrice = dialogView.findViewById<View>(R.id.layoutPrice)
+        val tvPrice = dialogView.findViewById<TextView>(R.id.tvPriceValue)
+        val tvFootnote = dialogView.findViewById<TextView>(R.id.tvFootnote)
+        
+        val btnPositive = dialogView.findViewById<MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<MaterialButton>(R.id.btnDialogNegative)
+
+        tvId.text = "#REQ-${req.id.takeLast(5).uppercase()}"
+        tvName.text = req.brandAndModel
+        tvSerial.text = "S/N: ${req.serialNumber}"
+        tvDesc.text = req.problemDescription
+        ivThumb.load(req.photoUrl) {
+            crossfade(true)
+            placeholder(R.drawable.ic_laptop)
+            error(R.drawable.ic_laptop)
+        }
+
+        val alertDialog = MaterialAlertDialogBuilder(this)
+            .setView(dialogView)
+            .create()
+
+        when (req.status.uppercase()) {
+            "COTIZADO" -> {
+                ivIcon.setImageResource(R.drawable.ic_check)
+                ivIcon.setColorFilter(getColor(R.color.status_green_text))
+                tvStatus.text = "¡Presupuesto Listo!"
+                tvStatus.setTextColor(getColor(R.color.status_green_text))
                 
-                Descripción:
-                ${req.problemDescription}
+                tvFootnote.visibility = View.GONE
+                layoutPrice.visibility = View.VISIBLE
+                tvPrice.text = String.format(java.util.Locale.getDefault(), "S/. %.2f", req.estimatedPrice)
+
+                if (req.adminComment.isNotEmpty()) {
+                    layoutAdmin.visibility = View.VISIBLE
+                    tvAdmin.text = req.adminComment
+                }
+
+                btnPositive.text = "Aceptar y Pagar"
+                btnPositive.setOnClickListener {
+                    alertDialog.dismiss()
+                    val intent = Intent(this, NewRepairActivity::class.java).apply {
+                        putExtra("FROM_QUOTATION", true)
+                        putExtra("QUOTATION_DATA", req)
+                    }
+                    startActivity(intent)
+                }
                 
-                ${if (req.adminComment.isNotEmpty()) "\nRespuesta del técnico:\n${req.adminComment}" else "\nEstamos procesando tu solicitud. Te notificaremos cuando tengamos un presupuesto listo."}
-            """.trimIndent())
-            .setPositiveButton("Entendido", null)
-            .setNegativeButton("Cancelar Solicitud") { _, _ ->
-                showConfirmCancelDialog(req.id)
+                btnNegative.text = "Rechazar"
+                btnNegative.setOnClickListener {
+                    alertDialog.dismiss()
+                    showConfirmCancelDialog(req.id)
+                }
             }
-            .show()
+            "RECHAZADO" -> {
+                ivIcon.setImageResource(R.drawable.ic_delete)
+                ivIcon.setColorFilter(getColor(R.color.status_orange_text))
+                tvStatus.text = "Solicitud Rechazada"
+                tvStatus.setTextColor(getColor(R.color.status_orange_text))
+                
+                if (req.adminComment.isNotEmpty()) {
+                    layoutAdmin.visibility = View.VISIBLE
+                    tvAdmin.text = req.adminComment
+                }
+                
+                btnPositive.text = "Entendido"
+                btnPositive.setOnClickListener { alertDialog.dismiss() }
+                
+                btnNegative.text = "Eliminar"
+                btnNegative.setOnClickListener {
+                    alertDialog.dismiss()
+                    showConfirmCancelDialog(req.id)
+                }
+            }
+            else -> {
+                btnPositive.text = "Entendido"
+                btnPositive.setOnClickListener { alertDialog.dismiss() }
+                
+                btnNegative.text = "Cancelar"
+                btnNegative.setOnClickListener {
+                    alertDialog.dismiss()
+                    showConfirmCancelDialog(req.id)
+                }
+            }
+        }
+        alertDialog.show()
     }
 
     private fun showConfirmCancelDialog(requestId: String) {
         MaterialAlertDialogBuilder(this)
-            .setTitle("¿Eliminar solicitud?")
-            .setMessage("Esta acción cancelará tu pedido de cotización permanentemente.")
+            .setTitle("¿Confirmar acción?")
+            .setMessage("Esta acción eliminará la solicitud de forma permanente.")
             .setPositiveButton("Eliminar") { _, _ ->
                 viewModel.deleteRequest(requestId)
-                Toast.makeText(this, "Solicitud cancelada", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Solicitud eliminada", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Volver", null)
             .show()

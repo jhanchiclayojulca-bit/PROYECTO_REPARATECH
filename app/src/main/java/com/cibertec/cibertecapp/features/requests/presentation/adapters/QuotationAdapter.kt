@@ -1,6 +1,7 @@
 package com.cibertec.cibertecapp.features.requests.presentation.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.cibertec.cibertecapp.R
@@ -9,7 +10,8 @@ import com.cibertec.cibertecapp.features.requests.domain.model.QuotationRequest
 import java.util.Locale
 
 class QuotationAdapter(
-    private val onClick: (QuotationRequest) -> Unit
+    private val onClick: (QuotationRequest) -> Unit,
+    private val onRejectClick: ((QuotationRequest) -> Unit)? = null
 ) : RecyclerView.Adapter<QuotationAdapter.ViewHolder>() {
 
     private var requests = listOf<QuotationRequest>()
@@ -30,33 +32,46 @@ class QuotationAdapter(
 
             // Admin Comment logic
             if (req.adminComment.isNotEmpty()) {
-                binding.layoutAdminComment.visibility = android.view.View.VISIBLE
+                binding.layoutAdminComment.visibility = View.VISIBLE
                 binding.tvAdminComment.text = req.adminComment
             } else {
-                binding.layoutAdminComment.visibility = android.view.View.GONE
+                binding.layoutAdminComment.visibility = View.GONE
             }
 
-            // Status colors
+            // Status colors and Button logic
+            if (req.photoUrl.isEmpty()) {
+                binding.tvDeviceName.text = "Consulta: ${req.brandAndModel}"
+                binding.tvReqId.text = "#TICKET-${req.id.takeLast(5).uppercase()}"
+            }
+
             when (req.status.uppercase()) {
                 "COTIZADO" -> {
                     binding.cardStatus.setCardBackgroundColor(context.getColor(R.color.status_green_bg))
                     binding.tvStatus.setTextColor(context.getColor(R.color.status_green_text))
-                    binding.btnAction.text = "Aceptar Cotización"
+                    binding.btnAction.text = "Aceptar"
+                    binding.btnReject.visibility = View.VISIBLE
+                    binding.btnReject.text = "Rechazar"
                 }
                 "RECHAZADO" -> {
                     binding.cardStatus.setCardBackgroundColor(context.getColor(R.color.status_orange_bg))
                     binding.tvStatus.setTextColor(context.getColor(R.color.status_orange_text))
                     binding.btnAction.text = "Ver Motivo"
+                    binding.btnReject.visibility = View.VISIBLE
+                    binding.btnReject.text = "Eliminar"
                 }
                 else -> {
+                    // PENDIENTE
                     binding.cardStatus.setCardBackgroundColor(context.getColor(R.color.brand_blue_light))
                     binding.tvStatus.setTextColor(context.getColor(R.color.brand_blue))
                     binding.btnAction.text = "Ver Detalles"
+                    binding.btnReject.visibility = View.VISIBLE
+                    binding.btnReject.text = "Cancelar"
                 }
             }
 
             binding.root.setOnClickListener { onClick(req) }
             binding.btnAction.setOnClickListener { onClick(req) }
+            binding.btnReject.setOnClickListener { onRejectClick?.invoke(req) }
         }
     }
 

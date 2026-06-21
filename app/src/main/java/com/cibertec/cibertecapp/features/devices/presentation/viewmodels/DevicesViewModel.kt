@@ -20,6 +20,9 @@ class DevicesViewModel(application: Application) : AndroidViewModel(application)
     private val repository = DeviceRepositoryImpl(application)
     private val getDevicesUseCase = GetDevicesUseCase(repository)
     private val addDeviceUseCase = AddDeviceUseCase(repository)
+    
+    private val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+    private val auth = com.google.firebase.auth.FirebaseAuth.getInstance()
 
     private val _state = MutableStateFlow(DevicesState())
     val state: StateFlow<DevicesState> = _state.asStateFlow()
@@ -30,6 +33,24 @@ class DevicesViewModel(application: Application) : AndroidViewModel(application)
     private var allDevices = emptyList<Device>()
     private var currentCategory = ""
     private var currentQuery = ""
+
+    init {
+        listenToDevices() // ESCUCHA EN TIEMPO REAL
+    }
+
+    private fun listenToDevices() {
+        val user = auth.currentUser ?: return
+        db.collection("devices")
+            .whereEqualTo("userId", user.uid)
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot != null) {
+                    allDevices = snapshot.documents.mapNotNull { doc ->
+                        doc.toObject(Device::class.java)?.copy(id = doc.id)
+                    }
+                    applyFilters()
+                }
+            }
+    }
 
     fun loadDevices() {
         viewModelScope.launch {

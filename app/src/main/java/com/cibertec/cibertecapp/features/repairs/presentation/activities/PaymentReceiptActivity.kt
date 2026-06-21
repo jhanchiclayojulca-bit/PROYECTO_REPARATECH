@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -45,118 +46,151 @@ class PaymentReceiptActivity : AppCompatActivity() {
     }
 
     private fun displayReceipt(request: RepairRequest) {
-        binding.tvReceiptOrderId.text = request.orderId
+        // Lógica dinámica para Etiquetas e IDs
+        if (request.paymentMethod == "Tienda") {
+            binding.tvReceiptOrderLabel.text = "ID DE SOLICITUD"
+            binding.tvReceiptOrderId.text = request.orderId
+            binding.tvReceiptDateLabel.text = "FECHA SOLICITUD"
+            
+            binding.tvSuccessTitle.text = "¡Solicitud Confirmada!"
+            binding.tvSuccessMessage.text = "El pago será presencial."
+            binding.ivSuccessIcon.setImageResource(R.drawable.ic_home)
+            binding.tvReceiptTotalLabel.text = "Total a Pagar"
+            binding.tvStatusDescription.text = "Hemos recibido tu solicitud. El técnico está a la espera de recibir tu equipo para iniciar el diagnóstico oficial."
+            binding.btnSendEmail.visibility = View.GONE
+            binding.btnDownloadPdf.visibility = View.GONE
+        } else {
+            binding.tvReceiptOrderLabel.text = "ID DE TRANSACCIÓN"
+            binding.tvReceiptOrderId.text = if (request.paymentId.isNotEmpty()) request.paymentId else request.orderId
+            binding.tvReceiptDateLabel.text = "FECHA PAGO"
+            
+            binding.tvSuccessTitle.text = "¡Pago Exitoso!"
+            binding.ivSuccessIcon.setImageResource(R.drawable.ic_check)
+            binding.tvStatusDescription.text = "¡Pago verificado! Tu equipo ha sido ingresado al taller y nuestros técnicos han comenzado el proceso de reparación."
+            binding.btnSendEmail.visibility = View.VISIBLE
+            binding.btnDownloadPdf.visibility = View.VISIBLE
+            binding.btnSendEmail.setOnClickListener { sendReceiptEmail(request) }
+        }
+
+        // Fecha real capturada del sistema
+        binding.tvReceiptDate.text = request.formattedDate
+        
         binding.tvReceiptDeviceName.text = request.brandAndModel
         binding.tvReceiptServiceType.text = "Reparación ${request.serviceType}"
+        
         binding.tvReceiptBaseCost.text = String.format(Locale.getDefault(), "S/.%.2f", request.baseCost + request.tax)
         binding.tvReceiptTax.text = String.format(Locale.getDefault(), "S/.%.2f", request.tax)
         binding.tvReceiptTotal.text = String.format(Locale.getDefault(), "S/.%.2f", request.total)
-
-        when (request.paymentMethod) {
-            "Tienda" -> {
-                binding.tvSuccessTitle.text = "¡Solicitud Confirmada!"
-                binding.tvSuccessMessage.text = "Tu orden ha sido registrada. Acércate a nuestro taller para el pago."
-                binding.ivSuccessIcon.setImageResource(R.drawable.ic_home)
-                binding.tvReceiptTotalLabel.text = "Total a Pagar"
-                binding.btnSendEmail.visibility = android.view.View.GONE
-            }
-            else -> {
-                binding.btnSendEmail.visibility = android.view.View.VISIBLE
-                binding.btnSendEmail.setOnClickListener { sendReceiptEmail(request) }
-            }
-        }
     }
 
     private fun setupPdfListener(request: RepairRequest) {
-        binding.btnDownloadPdf.setOnClickListener {
-            generateAndOpenPdf(request)
-        }
+        binding.btnDownloadPdf.setOnClickListener { generateAndOpenPdf(request) }
     }
 
     private fun generateAndOpenPdf(request: RepairRequest) {
         val pdfDocument = PdfDocument()
         val paint = Paint()
         val titlePaint = Paint()
-
-        // Page info: A4 size (approx 595 x 842 points)
         val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
         val page = pdfDocument.startPage(pageInfo)
         val canvas: Canvas = page.canvas
 
-        // Header
-        titlePaint.textAlign = Paint.Align.CENTER
-        titlePaint.textSize = 24f
+        // --- ESTILO PROFESIONAL ---
+        val brandColor = Color.parseColor("#003D9B")
+        val lightGray = Color.parseColor("#F5F5F5")
+        val dividerColor = Color.parseColor("#EEEEEE")
+
+        // 1. Header con fondo
+        paint.color = brandColor
+        canvas.drawRect(0f, 0f, 595f, 120f, paint)
+
+        titlePaint.color = Color.WHITE
+        titlePaint.textSize = 30f
         titlePaint.isFakeBoldText = true
-        titlePaint.color = Color.parseColor("#003D9B")
-        canvas.drawText("REPARATECH - COMPROBANTE", 595f / 2, 80f, titlePaint)
-
+        canvas.drawText("REPARATECH", 50f, 65f, titlePaint)
+        
+        paint.color = Color.WHITE
         paint.textSize = 12f
+        canvas.drawText("COMPROBANTE ELECTRÓNICO", 50f, 90f, paint)
+
+        // 2. Estado Pagado
+        paint.color = Color.parseColor("#4CAF50")
+        canvas.drawRect(450f, 40f, 545f, 80f, paint)
+        paint.color = Color.WHITE
+        paint.textAlign = Paint.Align.CENTER
+        paint.isFakeBoldText = true
+        canvas.drawText("PAGADO", 497.5f, 65f, paint)
+
+        // 3. Info de la Orden (Bloque Gris)
+        paint.textAlign = Paint.Align.LEFT
+        paint.color = lightGray
+        canvas.drawRect(50f, 150f, 545f, 230f, paint)
+        
         paint.color = Color.BLACK
-        canvas.drawText("Servicio Técnico de Excelencia", 595f / 2, 105f, paint)
-        canvas.drawLine(50f, 130f, 545f, 130f, paint)
+        paint.textSize = 10f
+        paint.isFakeBoldText = true
+        canvas.drawText("ID DE ORDEN:", 70f, 180f, paint)
+        canvas.drawText("FECHA EMISIÓN:", 70f, 205f, paint)
+        canvas.drawText("TRANSACCIÓN ID:", 300f, 180f, paint)
+        
+        paint.isFakeBoldText = false
+        canvas.drawText(request.orderId, 150f, 180f, paint)
+        canvas.drawText(request.formattedDate.ifEmpty { "Hoy" }, 165f, 205f, paint)
+        canvas.drawText(request.paymentId.ifEmpty { "N/A" }, 400f, 180f, paint)
 
-        // Details
-        var y = 180f
-        val leftX = 70f
-        val rightX = 525f
-        
+        // 4. Detalle del Equipo
+        paint.textSize = 14f
         paint.isFakeBoldText = true
-        canvas.drawText("ID DE ORDEN:", leftX, y, paint)
-        paint.isFakeBoldText = false
-        canvas.drawText(request.orderId.ifEmpty { "N/A" }, leftX + 110, y, paint)
-        
-        y += 30f
-        paint.isFakeBoldText = true
-        canvas.drawText("EQUIPO:", leftX, y, paint)
-        paint.isFakeBoldText = false
-        canvas.drawText(request.brandAndModel, leftX + 100, y, paint)
+        canvas.drawText("DETALLES DEL SERVICIO", 50f, 280f, paint)
+        canvas.drawLine(50f, 290f, 545f, 290f, paint)
 
-        y += 30f
-        paint.isFakeBoldText = true
-        canvas.drawText("SERVICIO:", leftX, y, paint)
         paint.isFakeBoldText = false
-        canvas.drawText(request.serviceType, leftX + 100, y, paint)
+        paint.textSize = 12f
+        canvas.drawText("Equipo:", 50f, 320f, paint)
+        paint.isFakeBoldText = true
+        canvas.drawText(request.brandAndModel, 120f, 320f, paint)
+        
+        paint.isFakeBoldText = false
+        canvas.drawText("Servicio:", 50f, 350f, paint)
+        paint.isFakeBoldText = true
+        canvas.drawText(request.serviceType, 120f, 350f, paint)
 
-        y += 60f
-        canvas.drawLine(50f, y, 545f, y, paint)
-        
-        y += 40f
-        paint.isFakeBoldText = true
-        canvas.drawText("DESGLOSE DE PAGO", leftX, y, paint)
-        
-        y += 30f
-        paint.isFakeBoldText = false
-        canvas.drawText("Costo Base + Tax:", leftX, y, paint)
+        // 5. Resumen de Costos
+        canvas.drawLine(50f, 400f, 545f, 400f, paint)
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText(String.format("S/. %.2f", request.baseCost + request.tax), rightX, y, paint)
+        paint.isFakeBoldText = false
+        canvas.drawText("Subtotal:", 400f, 440f, paint)
+        canvas.drawText(String.format("S/. %.2f", request.baseCost + request.tax), 545f, 440f, paint)
         
-        y += 25f
-        paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("Impuestos (18%):", leftX, y, paint)
-        paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText(String.format("S/. %.2f", request.tax), rightX, y, paint)
+        canvas.drawText("Gastos de envío/prioridad:", 400f, 470f, paint)
+        canvas.drawText(String.format("S/. %.2f", request.additionalCost), 545f, 470f, paint)
 
-        y += 40f
-        paint.textAlign = Paint.Align.LEFT
-        paint.textSize = 18f
+        // 6. TOTAL FINAL
+        paint.textSize = 22f
         paint.isFakeBoldText = true
-        canvas.drawText("TOTAL:", leftX, y, paint)
-        paint.textAlign = Paint.Align.RIGHT
-        paint.color = Color.parseColor("#003D9B")
-        canvas.drawText(String.format("S/. %.2f", request.total), rightX, y, paint)
+        paint.color = brandColor
+        canvas.drawText("TOTAL:", 400f, 520f, paint)
+        canvas.drawText(String.format("S/. %.2f", request.total), 545f, 520f, paint)
+
+        // 7. Footer
+        paint.textAlign = Paint.Align.CENTER
+        paint.color = Color.GRAY
+        paint.textSize = 10f
+        paint.isFakeBoldText = false
+        canvas.drawText("Gracias por confiar en ReparaTech Trujillo.", 595f/2, 750f, paint)
+        canvas.drawText(" Salaverry 13611, Trujillo - Perú | soporte@reparatech.com", 595f/2, 770f, paint)
 
         pdfDocument.finishPage(page)
 
-        // Save file
-        val fileName = "Recibo_${request.orderId}.pdf"
+        val fileName = "Factura_${request.orderId}.pdf"
         val file = File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
         
         try {
             pdfDocument.writeTo(FileOutputStream(file))
-            Toast.makeText(this, "PDF generado correctamente", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Comprobante generado", Toast.LENGTH_SHORT).show()
             openPdf(file)
         } catch (e: Exception) {
-            Toast.makeText(this, "Error al generar PDF: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
         } finally {
             pdfDocument.close()
         }
@@ -168,19 +202,34 @@ class PaymentReceiptActivity : AppCompatActivity() {
             setDataAndType(uri, "application/pdf")
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(intent, "Abrir comprobante con..."))
+        startActivity(Intent.createChooser(intent, "Abrir con..."))
     }
 
     private fun sendReceiptEmail(request: RepairRequest) {
-        val body = "ID Orden: ${request.orderId}\nEquipo: ${request.brandAndModel}\nTotal: S/.${request.total}"
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "Recibo ReparaTech - ${request.orderId}")
-            putExtra(Intent.EXTRA_TEXT, body)
-        }
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivity(Intent.createChooser(intent, "Enviar por..."))
-        }
+        val subject = "Recibo ReparaTech - ${request.orderId}"
+        val dateLabel = if (request.paymentMethod == "Tienda") "Fecha Solicitud" else "Fecha Pago"
+        val idLabel = if (request.paymentMethod == "Tienda") "ID Solicitud" else "ID Transacción"
+        val idValue = if (request.paymentId.isNotEmpty()) request.paymentId else request.orderId
+
+        val body = """
+            Detalles de tu orden en ReparaTech:
+            
+            $idLabel: $idValue
+            $dateLabel: ${request.formattedDate}
+            
+            Equipo: ${request.brandAndModel}
+            Servicio: ${request.serviceType}
+            Total: S/.${request.total}
+            
+            Gracias por confiar en ReparaTech Trujillo.
+        """.trimIndent()
+        
+        val uriText = "mailto:soporte@reparatech.com" +
+                "?subject=" + Uri.encode(subject) +
+                "&body=" + Uri.encode(body)
+        try {
+            startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse(uriText)))
+        } catch (e: Exception) { }
     }
 
     private fun setupListeners() {

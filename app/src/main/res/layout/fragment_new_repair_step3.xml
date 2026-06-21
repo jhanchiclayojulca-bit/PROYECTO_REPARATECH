@@ -252,8 +252,8 @@
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
                     android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pago en Tienda" android:textStyle="bold" android:textColor="@color/on_surface"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Paga al dejar tu equipo" android:textSize="12sp" android:textColor="@color/on_surface_variant"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pago Presencial" android:textStyle="bold" android:textColor="@color/on_surface"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Paga al entregar tu equipo" android:textSize="12sp" android:textColor="@color/on_surface_variant"/>
                 </LinearLayout>
                 <RadioButton android:id="@+id/rbPayStore" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false" android:clickable="false"/>
             </LinearLayout>

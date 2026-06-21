@@ -87,9 +87,59 @@ class HomeActivity : AppCompatActivity() {
                         error(R.mipmap.ic_launcher)
                         transformations(CircleCropTransformation())
                     }
+
+                    // Verificar si falta el número de teléfono
+                    if (state.userPhone.isEmpty() && !state.isLoading) {
+                        showPhoneInputDialog()
+                    }
                 }
             }
         }
+    }
+
+    private fun showPhoneInputDialog() {
+        // Evitar mostrar múltiples diálogos
+        if (supportFragmentManager.findFragmentByTag("PhoneInputDialog") != null) return
+
+        val input = android.widget.EditText(this)
+        input.inputType = android.text.InputType.TYPE_CLASS_PHONE
+        val container = android.widget.FrameLayout(this)
+        val params = android.widget.FrameLayout.LayoutParams(
+            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(60, 20, 60, 20)
+        input.layoutParams = params
+        input.hint = "Ej: 987654321"
+        container.addView(input)
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle("Completar Perfil")
+            .setMessage("Para poder contactarte sobre tus reparaciones, necesitamos tu número de teléfono.")
+            .setView(container)
+            .setCancelable(false)
+            .setPositiveButton("Guardar") { _, _ ->
+                val phone = input.text.toString().trim()
+                if (phone.length >= 9) {
+                    saveUserPhone(phone)
+                } else {
+                    Toast.makeText(this, "Ingresa un número válido", Toast.LENGTH_SHORT).show()
+                    showPhoneInputDialog()
+                }
+            }
+            .show()
+    }
+
+    private fun saveUserPhone(phone: String) {
+        val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: return
+        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(userId)
+            .update("phone", phone)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Perfil actualizado", Toast.LENGTH_SHORT).show()
+                viewModel.loadRepairs() // Recargar para actualizar el estado
+            }
     }
 
     private fun setupListeners() {
@@ -130,7 +180,7 @@ class HomeActivity : AppCompatActivity() {
     private fun openTrujilloMap() {
         try {
             // Usamos el formato q=lat,log(Etiqueta) para que Google Maps ponga un PIN rojo exacto
-            val gmmIntentUri = android.net.Uri.parse("geo:0,0?q=-8.111677,-79.028581(ReparaTech+Trujillo)")
+            val gmmIntentUri = android.net.Uri.parse("-8.212348414595628, -78.97810116291595")
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
             mapIntent.setPackage("com.google.android.apps.maps")
             if (mapIntent.resolveActivity(packageManager) != null) {

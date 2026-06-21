@@ -9,33 +9,40 @@ import androidx.browser.customtabs.CustomTabsIntent
 
 class PaymentActivity : AppCompatActivity() {
 
-    private var hasLaunched = false
+    private var browserLaunched = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Manejar el regreso automático del Deep Link
         if (intent?.data?.scheme == "reparatech") {
-            handleReturn(intent.data)
+            handleResult(intent.data)
             return
         }
 
-        val paymentUrl = intent.getStringExtra("PAYMENT_URL") ?: ""
-        if (paymentUrl.isNotEmpty() && !hasLaunched) {
-            hasLaunched = true
+        val url = intent.getStringExtra("PAYMENT_URL") ?: ""
+        if (url.isNotEmpty() && !browserLaunched) {
+            browserLaunched = true
             val customTabsIntent = CustomTabsIntent.Builder().build()
-            customTabsIntent.launchUrl(this, Uri.parse(paymentUrl))
+            customTabsIntent.launchUrl(this, Uri.parse(url))
+        } else {
+            finish()
         }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleReturn(intent.data)
+        if (intent.data?.scheme == "reparatech") {
+            handleResult(intent.data)
+        }
     }
 
-    private fun handleReturn(data: Uri?) {
+    private fun handleResult(data: Uri?) {
+        val resultIntent = Intent()
         if (data?.host == "success") {
-            setResult(Activity.RESULT_OK)
+            // Capturamos el payment_id real que devuelve Mercado Pago en la URL
+            val paymentId = data.getQueryParameter("payment_id") ?: "N/A"
+            resultIntent.putExtra("PAYMENT_ID", paymentId)
+            setResult(Activity.RESULT_OK, resultIntent)
         } else {
             setResult(Activity.RESULT_CANCELED)
         }
@@ -44,16 +51,13 @@ class PaymentActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        // Cuando el usuario regresa del navegador (sea por éxito o cierre manual)
-        // Damos un pequeño delay para que Android procese el Deep Link primero.
-        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            if (!isFinishing) {
-                // Si la actividad sigue viva aquí, es porque NO se disparó el success
-                // pero el usuario ya volvió a la app. Le damos por OK para que pueda
-                // terminar su orden (Simulación Sandbox).
-                setResult(Activity.RESULT_OK)
-                finish()
-            }
-        }, 1000)
+        if (browserLaunched) {
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                if (!isFinishing) {
+                    setResult(Activity.RESULT_CANCELED)
+                    finish()
+                }
+            }, 500)
+        }
     }
 }

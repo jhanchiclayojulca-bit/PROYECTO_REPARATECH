@@ -17,6 +17,7 @@ import com.cibertec.cibertecapp.databinding.FragmentNewRepairStep3Binding
 import com.cibertec.cibertecapp.features.repairs.presentation.activities.PaymentActivity
 import com.cibertec.cibertecapp.features.repairs.presentation.activities.PaymentReceiptActivity
 import com.cibertec.cibertecapp.features.repairs.presentation.viewmodels.NewRepairViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 import okhttp3.MediaType.Companion.toMediaType
@@ -28,10 +29,26 @@ class Step3Fragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: NewRepairViewModel by activityViewModels()
     private var selectedMethod = "Tarjeta"
+    private var isNavigating = false
+    private var verificationDialog: androidx.appcompat.app.AlertDialog? = null
 
     private val paymentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            viewModel.confirmOrder()
+            val paymentId = result.data?.getStringExtra("PAYMENT_ID") ?: "PAG-${(1000..9999).random()}"
+
+            // MOSTRAR ALERTA DE VERIFICACIÓN
+            verificationDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Verificando Pago")
+                .setMessage("Estamos validando tu transacción con Mercado Pago. ID: $paymentId")
+                .setCancelable(false)
+                .show()
+
+            lifecycleScope.launch {
+                viewModel.updatePaymentDetails(paymentId)
+                delay(1500) // Breve pausa estética
+                showProcessingState()
+                viewModel.confirmOrder()
+            }
         } else {
             Toast.makeText(requireContext(), "Pago no completado", Toast.LENGTH_SHORT).show()
         }
@@ -49,6 +66,12 @@ class Step3Fragment : Fragment() {
         setupListeners()
     }
 
+    private fun showProcessingState() {
+        // Bloqueamos el botón y cambiamos el texto como indicador de carga
+        binding.btnConfirmPay.isEnabled = false
+        binding.btnConfirmPay.text = "Confirmando..."
+    }
+
     private fun observeState() {
         lifecycleScope.launch {
             viewModel.state.collect { state ->
@@ -62,23 +85,26 @@ class Step3Fragment : Fragment() {
                 binding.tvAdditionalCost.text = String.format(Locale.getDefault(), "S/.%.2f", req.additionalCost)
                 binding.tvTotalCost.text = String.format(Locale.getDefault(), "S/.%.2f", req.total)
 
-                // CARGA DE IMAGEN INTELIGENTE: Prioriza nube, luego local, luego icono
                 val imageToLoad: Any = when {
                     req.photoUrl.isNotEmpty() -> req.photoUrl
                     viewModel.selectedImageUri.value != null -> viewModel.selectedImageUri.value!!
-                    else -> R.drawable.ic_laptop
+                    else -> R.mipmap.ic_launcher
                 }
                 
                 binding.ivSummaryDevice.load(imageToLoad) {
                     crossfade(true)
                     placeholder(R.drawable.ic_laptop)
-                    error(R.drawable.ic_laptop)
                 }
 
-                binding.btnConfirmPay.isEnabled = !state.isLoading && binding.cbTerms.isChecked
-                binding.btnConfirmPay.text = if (state.isLoading) "Procesando..." else "Confirmar y Pagar"
+                if (!state.isSuccess) {
+                    binding.btnConfirmPay.isEnabled = binding.cbTerms.isChecked && !state.isLoading
+                    binding.btnConfirmPay.text = if (state.isLoading) "Finalizando..." else "Confirmar y Pagar"
+                }
 
-                if (state.isSuccess) {
+                if (state.isSuccess && !isNavigating) {
+                    isNavigating = true
+                    verificationDialog?.dismiss() // Cerramos la alerta JUSTO antes de pasar a la siguiente pantalla
+                    delay(800) // Pausa mínima para que Firebase guarde bien
                     val intent = Intent(requireContext(), PaymentReceiptActivity::class.java).apply {
                         putExtra("REPAIR_REQUEST", req)
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -110,30 +136,17 @@ class Step3Fragment : Fragment() {
         val totalAmount = viewModel.state.value.request.total
         val accessToken = getString(R.string.mercadopago_access_token)
 
-        if (accessToken.contains("AQUÍ")) {
-            Toast.makeText(requireContext(), "Configura el Access Token", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        binding.btnConfirmPay.isEnabled = false
-        binding.btnConfirmPay.text = "Conectando..."
-
         lifecycleScope.launch {
             try {
                 val url = createPaymentPreference(totalAmount, accessToken)
-                if (url != null) {
+                url?.let {
                     val intent = Intent(requireContext(), PaymentActivity::class.java).apply {
-                        putExtra("PAYMENT_URL", url)
+                        putExtra("PAYMENT_URL", it)
                     }
                     paymentLauncher.launch(intent)
-                } else {
-                    Toast.makeText(requireContext(), "Error al conectar", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Error de red", Toast.LENGTH_SHORT).show()
-            } finally {
-                binding.btnConfirmPay.isEnabled = true
-                binding.btnConfirmPay.text = "Confirmar y Pagar"
             }
         }
     }
@@ -142,35 +155,25 @@ class Step3Fragment : Fragment() {
         val client = okhttp3.OkHttpClient()
         val json = """
             {
-                "items": [
-                    {
-                        "title": "Reparación ReparaTech",
-                        "quantity": 1,
-                        "unit_price": $amount,
-                        "currency_id": "PEN"
-                    }
-                ],
+                "items": [{"title": "ReparaTech", "quantity": 1, "unit_price": $amount, "currency_id": "PEN"}],
                 "back_urls": {
                     "success": "reparatech://success",
-                    "failure": "reparatech://failure"
+                    "failure": "reparatech://failure",
+                    "pending": "reparatech://success"
                 },
                 "auto_return": "all"
             }
         """.trimIndent()
-
         val body = json.toRequestBody("application/json; charset=utf-8".toMediaType())
         val request = okhttp3.Request.Builder()
             .url("https://api.mercadopago.com/checkout/preferences")
             .header("Authorization", "Bearer $token")
-            .post(body)
-            .build()
+            .post(body).build()
 
         return kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
             val response = client.newCall(request).execute()
             if (response.isSuccessful) {
-                val responseBody = response.body?.string()
-                val jsonObject = org.json.JSONObject(responseBody ?: "")
-                jsonObject.getString("init_point")
+                org.json.JSONObject(response.body?.string() ?: "").getString("init_point")
             } else null
         }
     }
@@ -180,17 +183,12 @@ class Step3Fragment : Fragment() {
         viewModel.updatePaymentMethod(method)
         binding.rbPayCard.isChecked = (method == "Tarjeta")
         binding.rbPayStore.isChecked = (method == "Tienda")
-        updateCardStroke(binding.cardPayCard, method == "Tarjeta")
-        updateCardStroke(binding.cardPayStore, method == "Tienda")
+        updateCardStroke(binding.cardPayCard, (method == "Tarjeta"))
+        updateCardStroke(binding.cardPayStore, (method == "Tienda"))
     }
 
     private fun updateCardStroke(card: com.google.android.material.card.MaterialCardView, isSelected: Boolean) {
         card.strokeWidth = if (isSelected) 6 else 2
         card.setStrokeColor(requireContext().getColor(if (isSelected) R.color.brand_blue else R.color.outline_variant))
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

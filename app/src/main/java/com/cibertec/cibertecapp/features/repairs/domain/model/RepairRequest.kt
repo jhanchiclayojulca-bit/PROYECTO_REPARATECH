@@ -23,5 +23,7 @@ data class RepairRequest(
     var total: Double = 0.0,
     var status: String = "Pendiente",
     var createdAt: Long = System.currentTimeMillis(),
-    var photoUrl: String = ""
+    var photoUrl: String = "",
+    var paymentId: String = "", // ID real de Mercado Pago
+    var formattedDate: String = "" // Fecha legible
 ) : Parcelable

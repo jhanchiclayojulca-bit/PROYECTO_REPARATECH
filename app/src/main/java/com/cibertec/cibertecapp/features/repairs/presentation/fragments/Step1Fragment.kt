@@ -73,6 +73,10 @@ class Step1Fragment : Fragment() {
         isCategorySelected = true
         viewModel.selectDevice(device)
         
+        // Limpiamos los campos manuales para evitar mezclar datos
+        binding.etBrandModel.text = null
+        binding.etSerial.text = null
+        
         binding.layoutManualEntry.visibility = View.GONE
         binding.layoutEvidence.visibility = View.GONE 
         binding.cardSelectedDevice.visibility = View.VISIBLE

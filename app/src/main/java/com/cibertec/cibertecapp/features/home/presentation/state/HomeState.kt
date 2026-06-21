@@ -7,5 +7,6 @@ data class HomeState(
     val isLoading: Boolean = false,
     val userName: String = "Usuario",
     val userPhotoUrl: String = "",
+    val userPhone: String = "",
     val error: String? = null
 )

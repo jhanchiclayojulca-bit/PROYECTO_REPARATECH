@@ -1,16 +1,15 @@
 package com.cibertec.cibertecapp.features.support.presentation.viewmodels
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.cibertec.cibertecapp.features.requests.data.repository.RequestRepositoryImpl
 import com.cibertec.cibertecapp.features.requests.domain.model.QuotationRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 
 class SupportViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -22,16 +21,17 @@ class SupportViewModel(application: Application) : AndroidViewModel(application)
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    fun sendSupportRequest(deviceName: String, category: String, problemType: String, description: String) {
+    fun sendSupportRequest(deviceName: String, category: String, problemType: String, description: String, imageUri: Uri?) {
         viewModelScope.launch {
             _isLoading.value = true
             val request = QuotationRequest(
-                brandAndModel = deviceName,
-                deviceCategory = category,
+                brandAndModel = deviceName.ifBlank { "Equipo Desconocido" },
+                deviceCategory = category.ifBlank { "Otros" },
                 problemDescription = "[$problemType] $description",
                 status = "PENDIENTE"
             )
-            val result = repository.createRequest(request, null)
+            // Usamos el repositorio para subir la foto si existe
+            val result = repository.createRequest(request, imageUri)
             if (result.isSuccess) {
                 _isSuccess.value = true
             }

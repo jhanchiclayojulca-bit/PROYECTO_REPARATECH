@@ -24,17 +24,19 @@ class HomeRepositoryImpl(private val context: Context) : HomeRepository {
         return if (user != null) {
             var name = user.displayName ?: "Usuario"
             var photo = user.photoUrl?.toString() ?: ""
+            var phone = user.phoneNumber ?: ""
 
             try {
                 val doc = db.collection("users").document(user.uid).get().await()
                 if (doc.exists()) {
                     name = doc.getString("name") ?: name
                     photo = doc.getString("photoUrl") ?: photo
+                    phone = doc.getString("phone") ?: phone
                 }
             } catch (e: Exception) { }
-            com.cibertec.cibertecapp.features.home.domain.model.UserHomeProfile(name, photo)
+            com.cibertec.cibertecapp.features.home.domain.model.UserHomeProfile(name, photo, phone)
         } else {
-            com.cibertec.cibertecapp.features.home.domain.model.UserHomeProfile("Invitado", "")
+            com.cibertec.cibertecapp.features.home.domain.model.UserHomeProfile("Invitado", "", "")
         }
     }
 

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Header Status -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardStatusIcon"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        app:cardCornerRadius="36dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="#FFF8E1">
+        <ImageView
+            android:id="@+id/ivStatusIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:src="@drawable/ic_settings_suggest"
+            app:tint="#F57C00" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tvStatusTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Solicitud en Revisión"
+        android:textAlignment="center"
+        android:textColor="@color/on_surface"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black" />
+
+    <!-- Price Tag (Solo visible si está cotizado) -->
+    <LinearLayout
+        android:id="@+id/layoutPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_circle_blue"
+        android:backgroundTint="@color/brand_blue_light"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Presupuesto:"
+            android:textSize="12sp"
+            android:textColor="@color/brand_blue" />
+        <TextView
+            android:id="@+id/tvPriceValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="S/. 0.00"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/brand_blue" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvRequestId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="#REQ-00000"
+        android:textAlignment="center"
+        android:textColor="@color/on_surface_variant"
+        android:textSize="12sp"
+        android:textAllCaps="true"
+        android:letterSpacing="0.1" />
+
+    <!-- Device Info Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/outline_variant"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp">
+                <ImageView
+                    android:id="@+id/ivDeviceThumb"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_laptop" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvDeviceName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="iPhone 15 Pro"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_surface"
+                    android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/tvDeviceSerial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S/N: 12345678"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Description -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Tu descripción:"
+        android:textStyle="bold"
+        android:textSize="13sp"
+        android:textColor="@color/brand_blue" />
+
+    <TextView
+        android:id="@+id/tvProblemDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/surface_bright"
+        android:padding="12dp"
+        android:text="El equipo no enciende..."
+        android:textColor="@color/on_surface_variant"
+        android:textSize="14sp" />
+
+    <!-- Admin Response -->
+    <LinearLayout
+        android:id="@+id/layoutAdminResp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Respuesta del Técnico:"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:textColor="#D32F2F" />
+
+        <TextView
+            android:id="@+id/tvAdminComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="?attr/colorSurfaceVariant"
+            android:padding="12dp"
+            android:text="No se puede reparar..."
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvFootnote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Estamos procesando tu pedido. Te avisaremos pronto."
+        android:textAlignment="center"
+        android:textColor="@color/on_surface_variant"
+        android:textSize="12sp"
+        android:fontStyle="italic" />
+
+    <!-- Botones de Acción -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDialogNegative"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="Rechazar"
+            android:textAllCaps="false"
+            android:textColor="#D32F2F"
+            app:strokeColor="#D32F2F"
+            app:cornerRadius="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDialogPositive"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="Aceptar"
+            android:textAllCaps="false"
+            android:fontFamily="sans-serif-black"
+            app:cornerRadius="12dp"
+            app:backgroundTint="@color/brand_blue" />
+    </LinearLayout>
+
+</LinearLayout>

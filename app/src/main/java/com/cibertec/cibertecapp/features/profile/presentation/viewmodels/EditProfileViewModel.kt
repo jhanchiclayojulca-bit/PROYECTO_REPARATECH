@@ -33,6 +33,12 @@ class EditProfileViewModel : ViewModel() {
         viewModelScope.launch {
             val result = repository.updateProfile(name, phone, address)
             if (result.isSuccess) {
+                // Actualizar el estado local inmediatamente para que la UI cambie sin recargar
+                _state.value = _state.value?.copy(
+                    name = name,
+                    phone = phone,
+                    address = address
+                )
                 _isSuccess.value = true
             }
         }

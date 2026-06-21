@@ -188,15 +188,39 @@ class NewRepairViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    fun updatePaymentDetails(paymentId: String) {
+        val sdf = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault())
+        val dateStr = sdf.format(java.util.Date())
+        
+        _state.update {
+            it.copy(
+                request = it.request.copy(
+                    paymentId = paymentId,
+                    formattedDate = dateStr
+                )
+            )
+        }
+    }
+
     fun confirmOrder() {
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
                 val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
                 val currentReq = _state.value.request
+                
+                // Asegurar fecha si no está puesta (para pago en tienda)
+                val dateStr = if (currentReq.formattedDate.isEmpty()) {
+                    val sdf = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault())
+                    sdf.format(java.util.Date())
+                } else {
+                    currentReq.formattedDate
+                }
+
                 val finalRequest = currentReq.copy(
                     userId = currentUser?.uid ?: "",
-                    total = currentReq.baseCost + currentReq.tax + currentReq.additionalCost
+                    total = currentReq.baseCost + currentReq.tax + currentReq.additionalCost,
+                    formattedDate = dateStr
                 )
                 val result = createRepairUseCase(finalRequest, _selectedImageUri.value)
                 result.onSuccess {

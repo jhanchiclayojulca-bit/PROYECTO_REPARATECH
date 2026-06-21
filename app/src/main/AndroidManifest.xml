@@ -70,14 +70,12 @@
         <activity
             android:name=".features.repairs.presentation.activities.PaymentActivity"
             android:exported="true"
-            android:launchMode="singleTask">
-            <intent-filter>
+            android:launchMode="singleTop">
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Esta es la dirección que Mercado Pago usará para volver con éxito -->
-                <data android:scheme="reparatech" android:host="success" />
-                <data android:scheme="reparatech" android:host="failure" />
+                <data android:scheme="reparatech" />
             </intent-filter>
         </activity>
 

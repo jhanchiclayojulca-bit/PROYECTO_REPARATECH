@@ -25,33 +25,31 @@ class RepairRepositoryImpl(private val context: Context) : RepairRepository {
             val userId = currentUser?.uid ?: ""
             request.userId = userId
             
-            request.orderId = "TXN-${Random.nextInt(10000, 99999)}-RT"
+            // Asegurar datos clave para que el historial NO salga vacío
+            if (request.orderId.isEmpty()) {
+                request.orderId = "TXN-${Random.nextInt(10000, 99999)}-RT"
+            }
             request.total = request.baseCost + request.tax + request.additionalCost
             
-            var photoUrl = request.photoUrl
+            // Subida de imagen si es nueva
             imageUri?.let { uri ->
                 try {
                     val file = uriToFile(uri)
-                    photoUrl = CloudinaryService.uploadImage(file)
-                    request.photoUrl = photoUrl
+                    request.photoUrl = CloudinaryService.uploadImage(file)
                     file.delete()
                 } catch (e: Exception) {
-                    Log.e("RepairRepo", "Cloudinary upload failed: ${e.message}")
+                    Log.e("RepairRepo", "Cloudinary failed: ${e.message}")
                 }
             }
 
-            // 1. Firebase
-            db.collection("repairs")
-                .document(request.id)
-                .set(request)
-                .await()
+            // 1. Guardar en Firebase (Usando el objeto completo con brandAndModel)
+            db.collection("repairs").document(request.id).set(request).await()
             
             // 2. Room Sync
             repairDao.insertRepairs(listOf(request.toEntity(userId)))
             
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e("RepairRepo", "Error crítico: ${e.message}")
             Result.failure(e)
         }
     }

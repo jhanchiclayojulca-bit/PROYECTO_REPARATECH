@@ -15,12 +15,32 @@ class ProfileViewModel : ViewModel() {
 
     private val repository = ProfileRepositoryImpl()
     private val getProfileUseCase = GetProfileUseCase(repository)
+    private val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+    private val auth = com.google.firebase.auth.FirebaseAuth.getInstance()
 
     private val _state = MutableStateFlow(ProfileState())
     val state: StateFlow<ProfileState> = _state.asStateFlow()
 
     init {
         loadProfile()
+        listenToProfileChanges() // ESCUCHA EN TIEMPO REAL
+    }
+
+    private fun listenToProfileChanges() {
+        val user = auth.currentUser ?: return
+        db.collection("users").document(user.uid)
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot != null && snapshot.exists()) {
+                    _state.update {
+                        it.copy(
+                            name = snapshot.getString("name") ?: it.name,
+                            phone = snapshot.getString("phone") ?: it.phone,
+                            address = snapshot.getString("address") ?: it.address,
+                            avatarUrl = snapshot.getString("photoUrl") ?: it.avatarUrl
+                        )
+                    }
+                }
+            }
     }
 
     fun loadProfile() {
