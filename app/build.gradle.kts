@@ -13,10 +13,10 @@ android {
 
     defaultConfig {
         applicationId = "com.cibertec.cibertecapp"
-        minSdk = 31
+        minSdk = 30
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -85,6 +85,9 @@ dependencies {
 
     // Biometrics
     implementation("androidx.biometric:biometric:1.1.0")
+
+    // Security Crypto
+    implementation(libs.androidx.security.crypto)
 
     // Pruebas
     testImplementation(libs.junit)

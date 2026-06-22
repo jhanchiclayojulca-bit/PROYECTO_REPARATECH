@@ -15,5 +15,13 @@ data class RepairEntity(
     val serviceType: String,
     val deliveryMethod: String,
     val photoUrl: String,
+    val problemDescription: String,
+    val baseCost: Double,
+    val tax: Double,
+    val additionalCost: Double,
+    val technician: String,
+    val rating: Float,
+    val ratingComment: String,
+    val isPaid: Boolean,
     val createdAt: Long
 )

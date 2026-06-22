@@ -32,22 +32,31 @@ class AuthRepositoryImpl : AuthRepository {
 
             // Si el usuario es nuevo, creamos su documento en Firestore
             if (user != null) {
-                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-                val currentDateTime = sdf.format(Date())
+                val userDoc = db.collection("users").document(user.uid).get().await()
+                
+                if (!userDoc.exists()) {
+                    // Solo creamos el documento base si NO existe
+                    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                    val currentDateTime = sdf.format(Date())
 
-                val userMap = hashMapOf(
-                    "uid" to user.uid,
-                    "name" to (user.displayName ?: "Usuario Google"),
-                    "email" to (user.email ?: ""),
-                    "phone" to (user.phoneNumber ?: ""),
-                    "photoUrl" to (user.photoUrl?.toString() ?: ""),
-                    "createdAt" to currentDateTime
-                )
-
-                // Usamos merge() para no sobreescribir datos si ya existía
-                db.collection("users").document(user.uid)
-                    .set(userMap, com.google.firebase.firestore.SetOptions.merge())
-                    .await()
+                    val userMap = hashMapOf(
+                        "uid" to user.uid,
+                        "name" to (user.displayName ?: "Usuario Google"),
+                        "email" to (user.email ?: ""),
+                        "phone" to "", // Se pedirá en el Home si está vacío
+                        "photoUrl" to (user.photoUrl?.toString() ?: ""),
+                        "createdAt" to currentDateTime
+                    )
+                    db.collection("users").document(user.uid).set(userMap).await()
+                } else {
+                    // Si ya existe, solo actualizamos nombre y foto por si cambiaron en Google
+                    // PERO NO tocamos el teléfono para no borrarlo
+                    val updates = hashMapOf<String, Any>(
+                        "name" to (user.displayName ?: userDoc.getString("name") ?: "Usuario Google"),
+                        "photoUrl" to (user.photoUrl?.toString() ?: userDoc.getString("photoUrl") ?: "")
+                    )
+                    db.collection("users").document(user.uid).update(updates).await()
+                }
             }
             true
         } catch (e: Exception) {

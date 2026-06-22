@@ -107,6 +107,14 @@
             android:name=".features.profile.presentation.activities.SecurityActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".features.profile.presentation.activities.SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".features.tips.presentation.activities.TipsActivity"
+            android:exported="false" />
+
         <!-- Support -->
         <activity
             android:name=".features.support.presentation.activities.SupportActivity"

@@ -34,15 +34,25 @@ class RequestRepositoryImpl(private val context: Context) : RequestRepository {
             }.sortedByDescending { it.createdAt }
 
             // Sync
-            val entities = remoteRequests.map { it.toEntity(userId) }
-            requestDao.deleteRequestsByUserId(userId)
-            requestDao.insertRequests(entities)
+            saveRequestsToLocal(remoteRequests)
 
             remoteRequests
         } catch (e: Exception) {
             Log.e("RequestRepo", "Offline - Loading from Room")
-            requestDao.getRequestsByUserId(userId).first().map { it.toDomain() }
+            getOfflineRequests()
         }
+    }
+
+    override suspend fun saveRequestsToLocal(requests: List<QuotationRequest>) {
+        val userId = auth.currentUser?.uid ?: return
+        val entities = requests.map { it.toEntity(userId) }
+        requestDao.deleteRequestsByUserId(userId)
+        requestDao.insertRequests(entities)
+    }
+
+    override suspend fun getOfflineRequests(): List<QuotationRequest> {
+        val userId = auth.currentUser?.uid ?: return emptyList()
+        return requestDao.getRequestsByUserId(userId).first().map { it.toDomain() }
     }
 
     override suspend fun createRequest(request: QuotationRequest, imageUri: Uri?): Result<Unit> {
@@ -84,7 +94,9 @@ class RequestRepositoryImpl(private val context: Context) : RequestRepository {
         id = id,
         userId = userId,
         deviceId = deviceId,
+        deviceCategory = deviceCategory,
         brandAndModel = brandAndModel,
+        serialNumber = serialNumber,
         problemDescription = problemDescription,
         status = status,
         estimatedPrice = estimatedPrice,
@@ -97,7 +109,9 @@ class RequestRepositoryImpl(private val context: Context) : RequestRepository {
         id = id,
         userId = userId,
         deviceId = deviceId,
+        deviceCategory = deviceCategory,
         brandAndModel = brandAndModel,
+        serialNumber = serialNumber,
         problemDescription = problemDescription,
         status = status,
         estimatedPrice = estimatedPrice,

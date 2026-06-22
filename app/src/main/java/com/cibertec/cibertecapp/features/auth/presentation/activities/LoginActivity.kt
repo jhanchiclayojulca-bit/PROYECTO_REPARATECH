@@ -1,6 +1,8 @@
 package com.cibertec.cibertecapp.features.auth.presentation.activities
 
+import android.content.Context
 import android.content.Intent
+import com.cibertec.cibertecapp.core.preferences.CibertecPreference
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -45,8 +47,20 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupGoogleClient()
+        loadSavedCredentials()
         setupListeners()
         observeState()
+    }
+
+    private fun loadSavedCredentials() {
+        val prefs = CibertecPreference(this)
+        val savedEmail = prefs.getSavedEmail()
+        val rememberMe = prefs.isRememberMeActive()
+
+        if (rememberMe && !savedEmail.isNullOrEmpty()) {
+            binding.etEmail.setText(savedEmail)
+            binding.cbRememberMe.isChecked = true
+        }
     }
 
     private fun setupGoogleClient() {
@@ -140,6 +154,27 @@ class LoginActivity : AppCompatActivity() {
         viewModel.login(email, password)
     }
 
+    private fun saveUserData() {
+        val prefs = CibertecPreference(this)
+        
+        // Guardar credenciales si "Recordarme" está marcado
+        if (binding.cbRememberMe.isChecked) {
+            prefs.saveCredentials(binding.etEmail.text.toString().trim(), true)
+        } else {
+            prefs.clearCredentials()
+        }
+
+        // Guardar datos básicos del usuario de Firebase
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.let {
+            prefs.saveUserSession(
+                it.displayName ?: "Usuario",
+                it.email,
+                it.photoUrl?.toString()
+            )
+        }
+    }
+
     private fun observeState() {
         lifecycleScope.launch {
             viewModel.state.collect { state ->
@@ -150,6 +185,7 @@ class LoginActivity : AppCompatActivity() {
                 binding.loadingOverlay.visibility = if (state.isLoading) View.VISIBLE else View.GONE
 
                 if (state.isSuccess) {
+                    saveUserData()
                     startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                     finish()
                 }

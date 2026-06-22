@@ -7,4 +7,6 @@ interface RequestRepository {
     suspend fun getMyRequests(): List<QuotationRequest>
     suspend fun createRequest(request: QuotationRequest, imageUri: Uri?): Result<Unit>
     suspend fun deleteRequest(requestId: String): Result<Unit>
+    suspend fun saveRequestsToLocal(requests: List<QuotationRequest>)
+    suspend fun getOfflineRequests(): List<QuotationRequest>
 }

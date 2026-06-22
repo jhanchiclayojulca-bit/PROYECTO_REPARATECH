@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.cibertec.cibertecapp.R
+import com.cibertec.cibertecapp.core.preferences.CibertecPreference
 import com.cibertec.cibertecapp.databinding.ActivityPersonalInfoBinding
 import com.cibertec.cibertecapp.features.profile.presentation.viewmodels.EditProfileViewModel
 import kotlinx.coroutines.launch
@@ -55,6 +56,11 @@ class PersonalInfoActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.isSuccess.collect { success ->
                 if (success) {
+                    // Sincronizar con preferencias locales
+                    val name = binding.etName.text.toString()
+                    val email = binding.etEmail.text.toString()
+                    CibertecPreference(this@PersonalInfoActivity).saveUserSession(name, email, null)
+
                     Toast.makeText(this@PersonalInfoActivity, "Perfil actualizado con éxito", Toast.LENGTH_SHORT).show()
                     exitEditMode()
                 }

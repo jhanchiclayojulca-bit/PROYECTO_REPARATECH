@@ -35,7 +35,18 @@ class DevicesViewModel(application: Application) : AndroidViewModel(application)
     private var currentQuery = ""
 
     init {
+        loadOfflineFirst()
         listenToDevices() // ESCUCHA EN TIEMPO REAL
+    }
+
+    private fun loadOfflineFirst() {
+        viewModelScope.launch {
+            val offline = repository.getOfflineDevices()
+            if (offline.isNotEmpty()) {
+                allDevices = offline
+                applyFilters()
+            }
+        }
     }
 
     private fun listenToDevices() {
@@ -44,10 +55,16 @@ class DevicesViewModel(application: Application) : AndroidViewModel(application)
             .whereEqualTo("userId", user.uid)
             .addSnapshotListener { snapshot, _ ->
                 if (snapshot != null) {
-                    allDevices = snapshot.documents.mapNotNull { doc ->
+                    val remoteList = snapshot.documents.mapNotNull { doc ->
                         doc.toObject(Device::class.java)?.copy(id = doc.id)
                     }
+                    allDevices = remoteList
                     applyFilters()
+                    
+                    // Sincronizar con Room
+                    viewModelScope.launch {
+                        repository.saveDevicesToLocal(remoteList)
+                    }
                 }
             }
     }

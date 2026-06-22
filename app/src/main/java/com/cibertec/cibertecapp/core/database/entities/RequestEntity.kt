@@ -9,6 +9,8 @@ data class RequestEntity(
     val userId: String,
     val deviceId: String,
     val brandAndModel: String,
+    val deviceCategory: String,
+    val serialNumber: String,
     val problemDescription: String,
     val status: String,
     val estimatedPrice: Double,

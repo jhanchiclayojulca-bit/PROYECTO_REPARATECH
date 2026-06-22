@@ -6,9 +6,11 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import com.cibertec.cibertecapp.core.preferences.CibertecPreference
 import com.cibertec.cibertecapp.R
 import com.cibertec.cibertecapp.features.home.presentation.activities.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +19,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applyTheme()
         setContentView(R.layout.activity_splash)
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -24,17 +27,31 @@ class SplashActivity : AppCompatActivity() {
         }, 2000)
     }
 
+    private fun applyTheme() {
+        val prefs = CibertecPreference(this)
+        val isDarkMode = prefs.isDarkModeEnabled()
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+    }
+
     private fun checkSession() {
         val auth = FirebaseAuth.getInstance()
-        val prefs = getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
-        val onboardingFinished = prefs.getBoolean("onboarding_finished", false)
+        val prefs = CibertecPreference(this)
+        val onboardingFinished = prefs.isOnboardingFinished()
 
         if (!onboardingFinished) {
             startActivity(Intent(this, OnboardingActivity::class.java))
             finish()
         } else if (auth.currentUser != null) {
-            // El usuario tiene sesión, intentamos biometría
-            tryBiometricAuth()
+            val biometricsEnabled = prefs.isBiometricsEnabled()
+            if (biometricsEnabled) {
+                tryBiometricAuth()
+            } else {
+                navigateToHome()
+            }
         } else {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()

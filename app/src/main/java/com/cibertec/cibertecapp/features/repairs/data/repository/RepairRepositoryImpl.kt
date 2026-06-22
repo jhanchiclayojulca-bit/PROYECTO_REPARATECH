@@ -74,6 +74,14 @@ class RepairRepositoryImpl(private val context: Context) : RepairRepository {
         serviceType = deviceCategory,
         deliveryMethod = deliveryMethod,
         photoUrl = photoUrl,
+        problemDescription = problemDescription,
+        baseCost = baseCost,
+        tax = tax,
+        additionalCost = additionalCost,
+        technician = "Asignando...",
+        rating = 0f,
+        ratingComment = "",
+        isPaid = isPaid,
         createdAt = createdAt
     )
 

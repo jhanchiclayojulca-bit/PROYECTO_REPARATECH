@@ -1,6 +1,8 @@
 package com.cibertec.cibertecapp.features.home.presentation.activities
 
+import android.content.Context
 import android.content.Intent
+import com.cibertec.cibertecapp.core.preferences.CibertecPreference
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -37,6 +39,7 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeClientBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        loadCachedUserData()
         setupListeners()
         setupSearch()
         setupRecycler()
@@ -47,7 +50,31 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        binding.bottomNavigation.selectedItemId = R.id.nav_home
         viewModel.loadRepairs()
+    }
+
+    private fun loadCachedUserData() {
+        val prefs = CibertecPreference(this)
+        val userName = prefs.getUserName()
+        val userPhoto = prefs.getUserPhoto()
+        val userPhone = prefs.getUserPhone()
+
+        binding.tvUserWelcome.text = "Hola, ${userName.split(" ").firstOrNull() ?: "Usuario"}"
+        
+        // Si ya tenemos el teléfono en caché, lo pasamos al viewModel para evitar el diálogo
+        if (userPhone.isNotEmpty()) {
+            viewModel.updateUserPhone(userPhone)
+        }
+
+        if (userPhoto != null) {
+            binding.avatarImage.load(userPhoto) {
+                crossfade(true)
+                placeholder(R.mipmap.ic_launcher)
+                error(R.mipmap.ic_launcher)
+                transformations(CircleCropTransformation())
+            }
+        }
     }
 
     private fun setupRecycler() {
@@ -81,6 +108,14 @@ class HomeActivity : AppCompatActivity() {
                     // Actualizar UI con datos de usuario
                     binding.tvUserWelcome.text = "Hola, ${state.userName.split(" ").firstOrNull() ?: "Usuario"}"
                     
+                    // Sincronizar con caché local
+                    CibertecPreference(this@HomeActivity).saveUserSession(
+                        state.userName,
+                        null,
+                        state.userPhotoUrl,
+                        state.userPhone
+                    )
+
                     binding.avatarImage.load(state.userPhotoUrl) {
                         crossfade(true)
                         placeholder(R.mipmap.ic_launcher)
@@ -164,6 +199,10 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, DevicesActivity::class.java))
         }
 
+        binding.btnTips.setOnClickListener {
+            startActivity(Intent(this, com.cibertec.cibertecapp.features.tips.presentation.activities.TipsActivity::class.java))
+        }
+
         binding.cardLocation.setOnClickListener {
             openTrujilloMap()
         }
@@ -172,8 +211,32 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, com.cibertec.cibertecapp.features.support.presentation.activities.SupportActivity::class.java))
         }
 
+        binding.fabWhatsApp.setOnClickListener {
+            openWhatsAppSupport()
+        }
+
         binding.btnLogout.setOnClickListener {
             showLogoutConfirmation()
+        }
+    }
+
+    private fun openWhatsAppSupport() {
+        val phoneNumber = "+51965069138" // Sede Trujillo
+        val userName = CibertecPreference(this).getUserName()
+        
+        // Intentar obtener el ID de la última reparación si existe
+        val latestRepair = viewModel.state.value.repairs.firstOrNull()
+        val repairInfo = if (latestRepair != null) " sobre mi pedido ${latestRepair.orderId}" else ""
+        
+        val message = "Hola ReparaTech, soy $userName. Necesito ayuda técnica$repairInfo."
+        val url = "https://api.whatsapp.com/send?phone=$phoneNumber&text=${java.net.URLEncoder.encode(message, "UTF-8")}"
+        
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = android.net.Uri.parse(url)
+            startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Instale WhatsApp para usar esta función", Toast.LENGTH_SHORT).show()
         }
     }
 

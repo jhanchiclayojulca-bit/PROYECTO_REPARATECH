@@ -76,6 +76,7 @@ class DevicesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        binding.bottomNavigation.selectedItemId = R.id.nav_devices
         viewModel.loadDevices()
     }
 

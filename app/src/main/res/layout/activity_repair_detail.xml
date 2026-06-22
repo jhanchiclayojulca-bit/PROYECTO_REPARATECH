@@ -326,6 +326,21 @@
 
             <!-- Support Button -->
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRateService"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="40dp"
+                android:text="Calificar Servicio"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-black"
+                android:visibility="gone"
+                app:cornerRadius="20dp"
+                app:backgroundTint="@color/brand_blue"
+                app:icon="@drawable/ic_check"
+                app:iconGravity="textStart" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSupportChat"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"

@@ -11,5 +11,7 @@ data class DeviceEntity(
     val model: String,
     val serialNumber: String,
     val category: String,
-    val photoUrl: String
+    val photoUrl: String,
+    val status: String,
+    val createdAt: Long
 )

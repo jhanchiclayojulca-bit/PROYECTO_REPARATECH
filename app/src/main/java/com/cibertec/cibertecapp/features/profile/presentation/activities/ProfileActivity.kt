@@ -35,6 +35,7 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        binding.bottomNavigation.selectedItemId = R.id.nav_profile
         viewModel.loadProfile()
     }
 
@@ -65,6 +66,10 @@ class ProfileActivity : AppCompatActivity() {
     private fun setupProfileOptions() {
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
+
+        binding.btnSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         binding.optionAccountInfo.root.setOnClickListener {

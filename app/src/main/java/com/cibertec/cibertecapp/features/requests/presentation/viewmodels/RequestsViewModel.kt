@@ -17,9 +17,45 @@ import kotlinx.coroutines.launch
 class RequestsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = RequestRepositoryImpl(application)
+    private val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+    private val auth = com.google.firebase.auth.FirebaseAuth.getInstance()
 
     private val _state = MutableStateFlow(RequestsState())
     val state: StateFlow<RequestsState> = _state.asStateFlow()
+
+    init {
+        loadOfflineFirst()
+        listenToRequests()
+    }
+
+    private fun loadOfflineFirst() {
+        viewModelScope.launch {
+            val offline = repository.getOfflineRequests()
+            if (offline.isNotEmpty()) {
+                _state.update { it.copy(requests = offline) }
+            }
+        }
+    }
+
+    private fun listenToRequests() {
+        val user = auth.currentUser ?: return
+        db.collection("requests")
+            .whereEqualTo("userId", user.uid)
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot != null) {
+                    val remoteList = snapshot.documents.mapNotNull { doc ->
+                        doc.toObject(QuotationRequest::class.java)?.apply { id = doc.id }
+                    }.sortedByDescending { it.createdAt }
+                    
+                    _state.update { it.copy(requests = remoteList) }
+                    
+                    // Sincronizar con Room
+                    viewModelScope.launch {
+                        repository.saveRequestsToLocal(remoteList)
+                    }
+                }
+            }
+    }
 
     fun loadRequests() {
         viewModelScope.launch {

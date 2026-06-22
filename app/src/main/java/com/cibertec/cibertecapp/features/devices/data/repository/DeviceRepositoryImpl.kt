@@ -35,16 +35,25 @@ class DeviceRepositoryImpl(private val context: Context) : DeviceRepository {
             }
 
             // Sync with Room
-            val entities = remoteDevices.map { it.toEntity(userId) }
-            deviceDao.deleteDevicesByUserId(userId)
-            deviceDao.insertDevices(entities)
+            saveDevicesToLocal(remoteDevices)
 
             remoteDevices
         } catch (e: Exception) {
             Log.e("DeviceRepo", "Offline mode - Fetching from Room")
-            // Devolver desde Room si falla el internet
-            deviceDao.getDevicesByUserId(userId).first().map { it.toDomain() }
+            getOfflineDevices()
         }
+    }
+
+    override suspend fun saveDevicesToLocal(devices: List<Device>) {
+        val userId = auth.currentUser?.uid ?: return
+        val entities = devices.map { it.toEntity(userId) }
+        deviceDao.deleteDevicesByUserId(userId)
+        deviceDao.insertDevices(entities)
+    }
+
+    override suspend fun getOfflineDevices(): List<Device> {
+        val userId = auth.currentUser?.uid ?: return emptyList()
+        return deviceDao.getDevicesByUserId(userId).first().map { it.toDomain() }
     }
 
     override suspend fun addDevice(device: Device, imageUri: Uri?): Result<Unit> {
@@ -97,11 +106,14 @@ class DeviceRepositoryImpl(private val context: Context) : DeviceRepository {
 
     private fun DeviceEntity.toDomain() = Device(
         id = id,
+        userId = userId,
         brand = brand,
         model = model,
         serialNumber = serialNumber,
         category = category,
-        photoUrl = photoUrl
+        photoUrl = photoUrl,
+        status = status,
+        createdAt = createdAt
     )
 
     private fun Device.toEntity(userId: String) = DeviceEntity(
@@ -111,7 +123,9 @@ class DeviceRepositoryImpl(private val context: Context) : DeviceRepository {
         model = model,
         serialNumber = serialNumber,
         category = category,
-        photoUrl = photoUrl
+        photoUrl = photoUrl,
+        status = status,
+        createdAt = createdAt
     )
 
     private fun uriToFile(uri: Uri): File {

@@ -51,6 +51,7 @@ class RequestsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        binding.bottomNavigation.selectedItemId = R.id.nav_requests
         viewModel.loadRequests()
     }
 

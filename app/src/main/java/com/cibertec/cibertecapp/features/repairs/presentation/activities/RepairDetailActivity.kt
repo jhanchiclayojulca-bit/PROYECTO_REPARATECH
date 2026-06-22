@@ -51,6 +51,39 @@ class RepairDetailActivity : AppCompatActivity() {
         binding.btnCancelRepair.setOnClickListener {
             showCancelConfirmation()
         }
+
+        binding.btnRateService.setOnClickListener {
+            showRatingDialog()
+        }
+    }
+
+    private fun showRatingDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_rating, null)
+        val ratingBar = dialogView.findViewById<android.widget.RatingBar>(R.id.ratingBar)
+        val etComment = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etComment)
+
+        // Si ya tiene calificación, mostrarla
+        viewModel.repair.value?.let {
+            if (it.rating > 0) {
+                ratingBar.rating = it.rating
+                etComment.setText(it.ratingComment)
+            }
+        }
+
+        MaterialAlertDialogBuilder(this)
+            .setView(dialogView)
+            .setPositiveButton("Enviar") { _, _ ->
+                val rating = ratingBar.rating
+                val comment = etComment.text.toString()
+                if (rating > 0) {
+                    viewModel.saveRating(rating, comment)
+                    Toast.makeText(this, "¡Gracias por tu calificación!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Por favor selecciona una puntuación", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     private fun showCancelConfirmation() {
@@ -99,6 +132,15 @@ class RepairDetailActivity : AppCompatActivity() {
                     // Mostrar botón de cancelar SOLO si el estado es PENDIENTE
                     binding.btnCancelRepair.visibility = if (it.status.uppercase() == "PENDIENTE") 
                         View.VISIBLE else View.GONE
+
+                    // Mostrar botón de calificar si está COMPLETADO
+                    binding.btnRateService.visibility = if (it.status.uppercase() == "COMPLETADO")
+                        View.VISIBLE else View.GONE
+                    
+                    if (it.rating > 0) {
+                        binding.btnRateService.text = "Ver mi calificación"
+                        binding.btnRateService.setIconResource(R.drawable.ic_visibility)
+                    }
 
                     when(it.status.uppercase()) {
                         "COMPLETADO" -> {

@@ -25,5 +25,6 @@ data class RepairRequest(
     var createdAt: Long = System.currentTimeMillis(),
     var photoUrl: String = "",
     var paymentId: String = "", // ID real de Mercado Pago
+    var isPaid: Boolean = false, // Nuevo: Indica si el pago fue procesado
     var formattedDate: String = "" // Fecha legible
 ) : Parcelable

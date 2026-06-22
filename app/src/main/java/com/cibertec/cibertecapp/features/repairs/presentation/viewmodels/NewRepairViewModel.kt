@@ -42,6 +42,7 @@ class NewRepairViewModel(application: Application) : AndroidViewModel(applicatio
 
     var isQuotationOnly = false
     var shouldStartAtStep2 = false
+    private var originalQuotationId: String? = null
 
     init {
         loadMyDevices()
@@ -55,6 +56,7 @@ class NewRepairViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun loadFromQuotation(quotation: QuotationRequest) {
         shouldStartAtStep2 = true
+        originalQuotationId = quotation.id
         _state.update {
             it.copy(
                 isSuccess = false,
@@ -196,6 +198,7 @@ class NewRepairViewModel(application: Application) : AndroidViewModel(applicatio
             it.copy(
                 request = it.request.copy(
                     paymentId = paymentId,
+                    isPaid = true,
                     formattedDate = dateStr
                 )
             )
@@ -224,10 +227,15 @@ class NewRepairViewModel(application: Application) : AndroidViewModel(applicatio
                 )
                 val result = createRepairUseCase(finalRequest, _selectedImageUri.value)
                 result.onSuccess {
+                    // Si venía de una cotización, eliminar la solicitud original
+                    originalQuotationId?.let { quotationId ->
+                        requestRepository.deleteRequest(quotationId)
+                    }
+                    
                     _state.update { it.copy(
                         isLoading = false, 
                         isSuccess = true,
-                        request = finalRequest // Actualizamos la solicitud con el ID generado
+                        request = finalRequest
                     ) }
                 }.onFailure { error ->
                     _state.update { it.copy(isLoading = false, error = error.message) }

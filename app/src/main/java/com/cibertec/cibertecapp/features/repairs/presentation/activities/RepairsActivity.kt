@@ -48,6 +48,7 @@ class RepairsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        binding.bottomNavigation.selectedItemId = R.id.nav_repairs
         viewModel.loadRepairs()
     }
 

@@ -17,5 +17,8 @@ data class Repair (
     val tax: Double = 0.0, // Campo para impuestos
     val additionalCost: Double = 0.0,
     val total: Double = 0.0,
+    val rating: Float = 0f,
+    val ratingComment: String = "",
+    val isPaid: Boolean = false,
     val createdAt: Long = 0L // Nuevo campo para ordenar bien
 )

@@ -71,24 +71,96 @@ class HomeRepositoryImpl(private val context: Context) : HomeRepository {
                     category = normalizedCategory,
                     service = doc.getString("problemDescription") ?: "Sin descripción",
                     deliveryMethod = doc.getString("deliveryMethod") ?: "Presencial",
-                    technician = "Técnico ReparaTech",
+                    technician = doc.getString("technician") ?: "Técnico ReparaTech",
                     baseCost = doc.getDouble("baseCost") ?: 0.0,
                     tax = doc.getDouble("tax") ?: 0.0,
                     additionalCost = doc.getDouble("additionalCost") ?: 0.0,
                     total = doc.getDouble("total") ?: 0.0,
+                    rating = doc.getDouble("rating")?.toFloat() ?: 0f,
+                    ratingComment = doc.getString("ratingComment") ?: "",
+                    isPaid = doc.getBoolean("isPaid") ?: false,
                     createdAt = createdAt
                 )
             }.sortedByDescending { it.createdAt }
 
             // Sync
-            val entities = remoteRepairs.map { it.toEntity(currentUser.uid) }
-            repairDao.deleteRepairsByUserId(currentUser.uid)
-            repairDao.insertRepairs(entities)
+            saveRepairsToLocal(remoteRepairs)
 
             remoteRepairs
         } catch (e: Exception) {
             android.util.Log.e("HomeRepo", "Offline - Loading from Room")
-            repairDao.getRepairsByUserId(currentUser.uid).first().map { it.toDomain() }
+            getOfflineRepairs()
+        }
+    }
+
+    override suspend fun getOfflineRepairs(): List<Repair> {
+        val currentUser = auth.currentUser ?: return emptyList()
+        return repairDao.getRepairsByUserId(currentUser.uid).first().map { it.toDomain() }
+    }
+
+    override suspend fun getRepairById(repairId: String): Repair? {
+
+        val cached = repairDao.getRepairById(repairId)?.toDomain()
+        
+        // 2. Intentar actualizar desde Firebase si hay internet
+        return try {
+            val doc = db.collection("repairs").document(repairId).get().await()
+            if (doc.exists()) {
+                val createdAt = doc.getLong("createdAt") ?: 0L
+                val remote = Repair(
+                    id = doc.id,
+                    deviceId = doc.getString("deviceId") ?: "",
+                    deviceName = doc.getString("brandAndModel") ?: "Desconocido",
+                    orderId = doc.getString("orderId") ?: "N/A",
+                    status = doc.getString("status") ?: "PENDIENTE",
+                    progress = when(doc.getString("status")?.uppercase()) {
+                        "COMPLETADO" -> 100
+                        "PROGRESO" -> 50
+                        "REVISIÓN" -> 25
+                        else -> 10
+                    },
+                    date = SimpleDateFormat("dd MMM", Locale.getDefault()).format(Date(createdAt)),
+                    photoUrl = doc.getString("photoUrl") ?: "",
+                    category = doc.getString("deviceCategory") ?: "",
+                    service = doc.getString("problemDescription") ?: "Sin descripción",
+                    deliveryMethod = doc.getString("deliveryMethod") ?: "Presencial",
+                    technician = doc.getString("technician") ?: "Técnico ReparaTech",
+                    baseCost = doc.getDouble("baseCost") ?: 0.0,
+                    tax = doc.getDouble("tax") ?: 0.0,
+                    additionalCost = doc.getDouble("additionalCost") ?: 0.0,
+                    total = doc.getDouble("total") ?: 0.0,
+                    rating = doc.getDouble("rating")?.toFloat() ?: 0f,
+                    ratingComment = doc.getString("ratingComment") ?: "",
+                    isPaid = doc.getBoolean("isPaid") ?: false,
+                    createdAt = createdAt
+                )
+                // Guardar en Room la versión actualizada
+                val userId = auth.currentUser?.uid ?: ""
+                repairDao.insertRepairs(listOf(remote.toEntity(userId)))
+                remote
+            } else cached
+        } catch (e: Exception) {
+            cached // Si no hay internet, devolvemos lo que tenemos en Room
+        }
+    }
+
+    override suspend fun saveRepairsToLocal(repairs: List<Repair>) {
+        val currentUser = auth.currentUser ?: return
+        val entities = repairs.map { it.toEntity(currentUser.uid) }
+        repairDao.deleteRepairsByUserId(currentUser.uid)
+        repairDao.insertRepairs(entities)
+    }
+
+    override suspend fun saveRepairRating(repairId: String, rating: Float, comment: String) {
+        try {
+            db.collection("repairs").document(repairId)
+                .update(mapOf(
+                    "rating" to rating,
+                    "ratingComment" to comment
+                )).await()
+        } catch (e: Exception) {
+            android.util.Log.e("HomeRepo", "Error saving rating: ${e.message}")
+            throw e
         }
     }
 
@@ -102,6 +174,14 @@ class HomeRepositoryImpl(private val context: Context) : HomeRepository {
         category = serviceType,
         deliveryMethod = deliveryMethod,
         photoUrl = photoUrl,
+        service = problemDescription,
+        baseCost = baseCost,
+        tax = tax,
+        additionalCost = additionalCost,
+        technician = technician,
+        rating = rating,
+        ratingComment = ratingComment,
+        isPaid = isPaid,
         createdAt = createdAt,
         date = SimpleDateFormat("dd MMM", Locale.getDefault()).format(Date(createdAt)),
         progress = when(status.uppercase()) {
@@ -123,6 +203,14 @@ class HomeRepositoryImpl(private val context: Context) : HomeRepository {
         serviceType = category,
         deliveryMethod = deliveryMethod,
         photoUrl = photoUrl,
+        problemDescription = service,
+        baseCost = baseCost,
+        tax = tax,
+        additionalCost = additionalCost,
+        technician = technician,
+        rating = rating,
+        ratingComment = ratingComment,
+        isPaid = isPaid,
         createdAt = createdAt
     )
 

@@ -35,19 +35,34 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private var currentQuery = ""
 
     init {
+        loadOfflineFirst()
         loadRepairs()
         listenToProfileChanges()
-        listenToRepairs() // ESCUCHA EN TIEMPO REAL PARA REPARACIONES
+        listenToRepairs()
+    }
+
+    private fun loadOfflineFirst() {
+        viewModelScope.launch {
+            val offline = repository.getOfflineRepairs()
+            if (offline.isNotEmpty()) {
+                allRepairs = offline
+                applyFilters()
+            }
+        }
     }
 
     private fun listenToRepairs() {
         val user = auth.currentUser ?: return
         db.collection("repairs")
             .whereEqualTo("userId", user.uid)
-            .addSnapshotListener { snapshot, _ ->
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    android.util.Log.e("HomeViewModel", "Snapshot error: ${error.message}")
+                    return@addSnapshotListener
+                }
+
                 if (snapshot != null) {
-                    allRepairs = snapshot.documents.mapNotNull { doc ->
-                        // Mapeo manual similar al del repositorio para mantener consistencia
+                    val remoteList = snapshot.documents.mapNotNull { doc ->
                         val status = doc.getString("status") ?: "PENDIENTE"
                         val createdAt = doc.getLong("createdAt") ?: 0L
                         Repair(
@@ -67,7 +82,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                             category = doc.getString("deviceCategory") ?: "",
                             service = doc.getString("problemDescription") ?: "Sin descripción",
                             deliveryMethod = doc.getString("deliveryMethod") ?: "Presencial",
-                            technician = "Técnico ReparaTech",
+                            technician = doc.getString("technician") ?: "Técnico ReparaTech",
                             baseCost = doc.getDouble("baseCost") ?: 0.0,
                             tax = doc.getDouble("tax") ?: 0.0,
                             additionalCost = doc.getDouble("additionalCost") ?: 0.0,
@@ -75,7 +90,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                             createdAt = createdAt
                         )
                     }.sortedByDescending { it.createdAt }
+                    
+                    allRepairs = remoteList
                     applyFilters()
+                    
+                    // Sincronizar con Room en segundo plano
+                    viewModelScope.launch {
+                        repository.saveRepairsToLocal(remoteList)
+                    }
                 }
             }
     }
@@ -120,6 +142,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         currentCategory = if (currentCategory == category) "" else category
         _selectedCategory.value = currentCategory
         applyFilters()
+    }
+
+    fun updateUserPhone(phone: String) {
+        _state.update { it.copy(userPhone = phone) }
     }
 
     fun searchRepairs(query: String) {

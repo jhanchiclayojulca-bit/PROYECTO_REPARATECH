@@ -14,4 +14,7 @@ interface RepairDao {
 
     @Query("DELETE FROM repairs WHERE userId = :userId")
     suspend fun deleteRepairsByUserId(userId: String)
+
+    @Query("SELECT * FROM repairs WHERE id = :repairId LIMIT 1")
+    suspend fun getRepairById(repairId: String): RepairEntity?
 }

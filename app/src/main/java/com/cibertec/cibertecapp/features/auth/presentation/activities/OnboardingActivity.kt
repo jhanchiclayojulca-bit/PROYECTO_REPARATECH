@@ -3,6 +3,7 @@ package com.cibertec.cibertecapp.features.auth.presentation.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.cibertec.cibertecapp.core.preferences.CibertecPreference
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,9 +81,8 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     private fun finishOnboarding() {
-        // Guardar que ya vio el onboarding
-        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        prefs.edit().putBoolean("onboarding_finished", true).apply()
+        // Guardar que ya vio el onboarding usando la clase de preferencias
+        CibertecPreference(this).setOnboardingFinished(true)
 
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
